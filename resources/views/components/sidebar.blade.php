@@ -29,7 +29,7 @@
         <!-- Logo Section -->
         <div class="sidebar-logo">
             <img src="{{ asset('images/logo.png') }}" alt="Find11 Logo" class="sidebar-logo-img">
-            <span x-show="sidebarOpen" class="sidebar-logo-text">Find11</span>
+            
         </div>
 
         <!-- Navigation Links -->
