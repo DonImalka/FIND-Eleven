@@ -1,0 +1,104 @@
+<x-app-layout>
+    <x-slot name="header">
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('All Schools') }}
+            </h2>
+        </div>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{-- Flash Messages --}}
+            @if(session('success'))
+                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            {{-- Filter Tabs --}}
+            <div class="mb-6">
+                <div class="flex space-x-4">
+                    <a href="{{ route('admin.schools.index') }}" 
+                       class="px-4 py-2 rounded-md {{ !$status ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+                        All
+                    </a>
+                    <a href="{{ route('admin.schools.index', ['status' => 'PENDING']) }}" 
+                       class="px-4 py-2 rounded-md {{ $status === 'PENDING' ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+                        Pending
+                    </a>
+                    <a href="{{ route('admin.schools.index', ['status' => 'APPROVED']) }}" 
+                       class="px-4 py-2 rounded-md {{ $status === 'APPROVED' ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+                        Approved
+                    </a>
+                    <a href="{{ route('admin.schools.index', ['status' => 'REJECTED']) }}" 
+                       class="px-4 py-2 rounded-md {{ $status === 'REJECTED' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300' }}">
+                        Rejected
+                    </a>
+                </div>
+            </div>
+
+            {{-- Schools Table --}}
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    @if($schools->count() > 0)
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">School Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">District</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registered</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($schools as $school)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $school->school_name }}</div>
+                                            <div class="text-sm text-gray-500">{{ $school->user->email }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $school->district }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $school->school_type }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            @if($school->status === 'PENDING')
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                                            @elseif($school->status === 'APPROVED')
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Approved</span>
+                                            @else
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Rejected</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $school->created_at->format('M d, Y') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                            <a href="{{ route('admin.schools.show', $school) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
+                                            @if($school->status === 'PENDING')
+                                                <form action="{{ route('admin.schools.approve', $school) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    <button type="submit" class="text-green-600 hover:text-green-900">Approve</button>
+                                                </form>
+                                                <form action="{{ route('admin.schools.reject', $school) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">Reject</button>
+                                                </form>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        {{-- Pagination --}}
+                        <div class="mt-4">
+                            {{ $schools->links() }}
+                        </div>
+                    @else
+                        <p class="text-gray-500">No schools found.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
