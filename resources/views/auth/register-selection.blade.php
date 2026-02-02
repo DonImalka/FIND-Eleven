@@ -4,9 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Choose Registration Type - Find11</title>
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
     <link rel="stylesheet" href="{{ asset('css/register-selection.css') }}">
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ route('home') }}" class="nav-logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Find11 Logo" class="logo-img">
+            </a>
+            <ul class="nav-menu">
+                <li><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                <li><a href="{{ route('about') }}" class="nav-link">About</a></li>
+                <li><a href="{{ route('login') }}" class="nav-link">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="register-selection">
         <div class="selection-container">
             <div class="selection-header">

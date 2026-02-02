@@ -1,124 +1,121 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Admin Dashboard') }}
-        </h2>
-    </x-slot>
+    <x-slot name="title">Admin Dashboard</x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div>
             {{-- Flash Messages --}}
             @if(session('success'))
-                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                <div class="alert success">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
                     {{ session('success') }}
                 </div>
             @endif
 
             {{-- Statistics Cards --}}
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stats-grid">
                 {{-- Pending Schools --}}
-                <div class="bg-yellow-50 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6">
-                        <div class="text-yellow-600 text-sm font-medium">Pending Schools</div>
-                        <div class="text-3xl font-bold text-yellow-700">{{ $pendingSchoolsCount }}</div>
-                    </div>
+                <div class="stat-card yellow">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-label">Pending Schools</div>
+                    <div class="stat-value">{{ $pendingSchoolsCount }}</div>
                 </div>
 
                 {{-- Approved Schools --}}
-                <div class="bg-green-50 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6">
-                        <div class="text-green-600 text-sm font-medium">Approved Schools</div>
-                        <div class="text-3xl font-bold text-green-700">{{ $approvedSchoolsCount }}</div>
-                    </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">✓</div>
+                    <div class="stat-label">Approved Schools</div>
+                    <div class="stat-value">{{ $approvedSchoolsCount }}</div>
                 </div>
 
                 {{-- Rejected Schools --}}
-                <div class="bg-red-50 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6">
-                        <div class="text-red-600 text-sm font-medium">Rejected Schools</div>
-                        <div class="text-3xl font-bold text-red-700">{{ $rejectedSchoolsCount }}</div>
-                    </div>
+                <div class="stat-card red">
+                    <div class="stat-icon">✗</div>
+                    <div class="stat-label">Rejected Schools</div>
+                    <div class="stat-value">{{ $rejectedSchoolsCount }}</div>
                 </div>
 
                 {{-- Total Players --}}
-                <div class="bg-blue-50 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6">
-                        <div class="text-blue-600 text-sm font-medium">Total Players</div>
-                        <div class="text-3xl font-bold text-blue-700">{{ $totalPlayersCount }}</div>
-                    </div>
+                <div class="stat-card purple">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-label">Total Players</div>
+                    <div class="stat-value">{{ $totalPlayersCount }}</div>
                 </div>
             </div>
 
             {{-- Quick Links --}}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <a href="{{ route('admin.schools.pending') }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition">
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold text-gray-900">Pending Approvals</h3>
-                        <p class="text-gray-600 text-sm mt-1">Review and approve school registrations</p>
-                    </div>
+            <h3 class="section-title">Quick Actions</h3>
+            <div class="stats-grid mb-8">
+                <a href="{{ route('admin.schools.pending') }}" class="modern-card" style="text-decoration: none; padding: 24px;">
+                    <div style="font-size: 2rem; margin-bottom: 12px;">⏳</div>
+                    <h3 style="font-size: 1.125rem; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">Pending Approvals</h3>
+                    <p style="color: #64748b; font-size: 0.875rem;">Review and approve school registrations</p>
                 </a>
 
-                <a href="{{ route('admin.schools.index') }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition">
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold text-gray-900">All Schools</h3>
-                        <p class="text-gray-600 text-sm mt-1">View and manage all registered schools</p>
-                    </div>
+                <a href="{{ route('admin.schools.index') }}" class="modern-card" style="text-decoration: none; padding: 24px;">
+                    <div style="font-size: 2rem; margin-bottom: 12px;">🏫</div>
+                    <h3 style="font-size: 1.125rem; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">All Schools</h3>
+                    <p style="color: #64748b; font-size: 0.875rem;">View and manage all registered schools</p>
                 </a>
 
-                <a href="{{ route('admin.players.index') }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition">
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold text-gray-900">All Players</h3>
-                        <p class="text-gray-600 text-sm mt-1">View all registered players</p>
-                    </div>
+                <a href="{{ route('admin.players.index') }}" class="modern-card" style="text-decoration: none; padding: 24px;">
+                    <div style="font-size: 2rem; margin-bottom: 12px;">🏏</div>
+                    <h3 style="font-size: 1.125rem; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">All Players</h3>
+                    <p style="color: #64748b; font-size: 0.875rem;">View all registered players</p>
                 </a>
             </div>
 
             {{-- Pending Schools Table --}}
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Pending Schools</h3>
-                    
+            <h3 class="section-title">Recent Pending Schools</h3>
+            <div class="modern-table-container">
+                <div style="padding: 24px;">
                     @if($pendingSchools->count() > 0)
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
+                        <table class="modern-table">
+                            <thead>
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">School Name</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">District</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Registered</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    <th>School Name</th>
+                                    <th>District</th>
+                                    <th>Type</th>
+                                    <th>Registered</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tbody>
                                 @foreach($pendingSchools as $school)
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ $school->school_name }}</div>
-                                            <div class="text-sm text-gray-500">{{ $school->user->email }}</div>
+                                        <td>
+                                            <div style="font-weight: 600; color: #1e293b;">{{ $school->school_name }}</div>
+                                            <div style="font-size: 0.875rem; color: #64748b;">{{ $school->user->email }}</div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $school->district }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $school->school_type }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $school->created_at->diffForHumans() }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                            <a href="{{ route('admin.schools.show', $school) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
-                                            <form action="{{ route('admin.schools.approve', $school) }}" method="POST" class="inline">
-                                                @csrf
-                                                <button type="submit" class="text-green-600 hover:text-green-900">Approve</button>
-                                            </form>
-                                            <form action="{{ route('admin.schools.reject', $school) }}" method="POST" class="inline">
-                                                @csrf
-                                                <button type="submit" class="text-red-600 hover:text-red-900">Reject</button>
-                                            </form>
+                                        <td>{{ $school->district }}</td>
+                                        <td>{{ $school->school_type }}</td>
+                                        <td>{{ $school->created_at->diffForHumans() }}</td>
+                                        <td>
+                                            <div style="display: flex; gap: 8px;">
+                                                <a href="{{ route('admin.schools.show', $school) }}" class="btn btn-info" style="padding: 6px 12px; font-size: 0.8rem;">View</a>
+                                                <form action="{{ route('admin.schools.approve', $school) }}" method="POST" style="display: inline;">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success" style="padding: 6px 12px; font-size: 0.8rem;">Approve</button>
+                                                </form>
+                                                <form action="{{ route('admin.schools.reject', $school) }}" method="POST" style="display: inline;">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.8rem;">Reject</button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     @else
-                        <p class="text-gray-500">No pending schools at the moment.</p>
+                        <div class="alert info">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                            </svg>
+                            No pending schools at the moment.
+                        </div>
                     @endif
                 </div>
             </div>
-        </div>
     </div>
 </x-app-layout>
