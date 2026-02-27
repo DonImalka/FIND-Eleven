@@ -19,6 +19,7 @@ use App\Http\Controllers\Player\DashboardController as PlayerDashboardController
 use App\Http\Controllers\Website\HomeController;
 use App\Http\Controllers\Website\AboutController;
 use App\Http\Controllers\Website\LiveScoreController;
+use App\Http\Controllers\Website\RankingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +39,9 @@ Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/live-scores', [LiveScoreController::class, 'index'])->name('live-scores.index');
 Route::get('/live-scores/{cricketMatch}', [LiveScoreController::class, 'show'])->name('live-scores.show');
 Route::get('/live-scores/{cricketMatch}/data', [LiveScoreController::class, 'data'])->name('live-scores.data');
+
+// Rankings (public)
+Route::get('/rankings', [RankingController::class, 'index'])->name('rankings.index');
 
 // Registration Routes
 Route::get('/register', [RegisterSelectionController::class, 'index'])

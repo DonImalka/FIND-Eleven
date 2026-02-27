@@ -269,6 +269,270 @@ body {
     margin-right: auto;
 }
 
+/* ══════════════════════════════════════════
+   Island Rankings Section
+   ══════════════════════════════════════════ */
+.rankings-section {
+    padding: 80px 2rem;
+    background: #fff;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 1.15rem;
+    margin-top: -1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+/* Tabs */
+.rankings-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.ranking-tab {
+    padding: 0.6rem 1.3rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 50px;
+    background: #fff;
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.25s;
+}
+
+.ranking-tab:hover {
+    border-color: #667eea;
+    color: #667eea;
+}
+
+.ranking-tab.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
+}
+
+/* Panels */
+.ranking-panel {
+    display: none;
+    animation: fadeInUp 0.35s ease-out;
+}
+
+.ranking-panel.active {
+    display: block;
+}
+
+.ranking-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #a0aec0;
+}
+
+.ranking-empty-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* Table */
+.ranking-table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+    border: 1px solid #e2e8f0;
+}
+
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+}
+
+.ranking-table thead {
+    background: #f7fafc;
+}
+
+.ranking-table th {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #718096;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.ranking-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #edf2f7;
+    vertical-align: middle;
+}
+
+.ranking-table tbody tr {
+    transition: background 0.2s;
+}
+
+.ranking-table tbody tr:hover {
+    background: #f0f4ff;
+}
+
+/* Top 3 row highlights */
+.top-rank-1 {
+    background: linear-gradient(90deg, #fffbeb, #fef3c7) !important;
+}
+
+.top-rank-2 {
+    background: linear-gradient(90deg, #f8fafc, #f1f5f9) !important;
+}
+
+.top-rank-3 {
+    background: linear-gradient(90deg, #fff7ed, #fed7aa22) !important;
+}
+
+/* Columns */
+.rank-col {
+    width: 50px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 1rem;
+}
+
+.player-col {
+    min-width: 180px;
+}
+
+.school-col {
+    min-width: 130px;
+}
+
+.age-col {
+    text-align: center;
+    width: 60px;
+}
+
+.stat-col {
+    text-align: center;
+    width: 70px;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.points-col {
+    text-align: right;
+    width: 90px;
+}
+
+.ranking-table th.stat-col,
+.ranking-table th.points-col,
+.ranking-table th.age-col,
+.ranking-table th.rank-col {
+    text-align: center;
+}
+
+.ranking-table th.points-col {
+    text-align: right;
+    color: #667eea;
+}
+
+/* Player info inside table */
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.player-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+.player-name {
+    font-weight: 700;
+    color: #2d3748;
+    font-size: 0.9rem;
+}
+
+.player-meta {
+    font-size: 0.72rem;
+    color: #a0aec0;
+}
+
+.school-name {
+    font-size: 0.88rem;
+    color: #4a5568;
+}
+
+.school-location {
+    font-size: 0.72rem;
+    color: #a0aec0;
+}
+
+.age-badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: #ebf4ff;
+    color: #667eea;
+}
+
+.points-badge {
+    display: inline-block;
+    padding: 0.25rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    background: #ebf4ff;
+    color: #667eea;
+}
+
+.points-badge.points-top {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* View Full Rankings CTA */
+.rankings-cta {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.btn-rankings {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 0.9rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-rankings:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.45);
+}
+
 /* Footer */
 .footer {
     background: #2d3748;
@@ -353,5 +617,37 @@ body {
     .stats-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+
+    .rankings-tabs {
+        gap: 0.35rem;
+    }
+
+    .ranking-tab {
+        padding: 0.45rem 0.9rem;
+        font-size: 0.78rem;
+    }
+
+    .ranking-table {
+        font-size: 0.82rem;
+    }
+
+    .ranking-table th,
+    .ranking-table td {
+        padding: 0.55rem 0.6rem;
+    }
+
+    .player-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+
+    .school-col {
+        display: none;
+    }
+
+    .ranking-table th.school-col {
+        display: none;
     }
 }

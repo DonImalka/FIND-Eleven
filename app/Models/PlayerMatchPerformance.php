@@ -23,6 +23,7 @@ class PlayerMatchPerformance extends Model
         'bowling_maidens',
         'bowling_runs_conceded',
         'bowling_wickets',
+        'bowling_dot_balls',
         // Fielding
         'fielding_catches',
         'fielding_run_outs',
@@ -74,6 +75,7 @@ class PlayerMatchPerformance extends Model
             'bowling_maidens' => ['label' => 'Maidens', 'type' => 'number', 'step' => '1'],
             'bowling_runs_conceded' => ['label' => 'Runs Conceded', 'type' => 'number', 'step' => '1'],
             'bowling_wickets' => ['label' => 'Wickets', 'type' => 'number', 'step' => '1'],
+            'bowling_dot_balls' => ['label' => 'Dot Balls', 'type' => 'number', 'step' => '1'],
         ];
 
         $fielding = [

@@ -135,6 +135,9 @@ class DatabaseSeeder extends Seeder
             Player::create($playerData);
         }
 
+        // Seed demo stats and rankings data for all players
+        $this->call(DemoStatSeeder::class);
+
         $this->command->info('Database seeded successfully!');
         $this->command->info('');
         $this->command->info('Login Credentials:');
