@@ -16,6 +16,7 @@
             <ul class="nav-menu">
                 <li><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                 <li><a href="{{ route('about') }}" class="nav-link">About</a></li>
+                <li><a href="{{ route('live-scores.index') }}" class="nav-link">Live Scores</a></li>
                 @guest
                     <li><a href="{{ route('login') }}" class="nav-link">Login</a></li>
                     <li><a href="{{ route('register') }}" class="nav-link btn-primary">Register</a></li>
@@ -118,6 +119,7 @@
                 <ul>
                     <li><a href="{{ route('home') }}">Home</a></li>
                     <li><a href="{{ route('about') }}">About Us</a></li>
+                    <li><a href="{{ route('live-scores.index') }}">Live Scores</a></li>
                     <li><a href="{{ route('register') }}">Register</a></li>
                     <li><a href="{{ route('login') }}">Login</a></li>
                 </ul>

@@ -21,5 +21,7 @@
         <x-sidebar :title="$title ?? 'Dashboard'">
             {{ $slot }}
         </x-sidebar>
+
+        @stack('scripts')
     </body>
 </html>
