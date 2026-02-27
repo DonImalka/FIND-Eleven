@@ -5,6 +5,7 @@ namespace App\Http\Controllers\School;
 use App\Http\Controllers\Controller;
 use App\Models\Player;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 /**
  * School Player Controller
@@ -33,7 +34,7 @@ class PlayerController extends Controller
 
         $players = $query->paginate(15);
         $ageCategories = Player::getAgeCategories();
-        $playerCategories = Player::getPlayerCategories();
+        $playerCategories = Player::getPlayerCategories(true);
 
         return view('school.players.index', compact(
             'players',
@@ -68,7 +69,7 @@ class PlayerController extends Controller
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
             'date_of_birth' => 'required|date|before:today',
-            'player_category' => 'required|in:' . implode(',', Player::getPlayerCategories()),
+            'player_category' => ['required', Rule::in(Player::getPlayerCategories())],
             'batting_style' => 'required|in:' . implode(',', Player::getBattingStyles()),
             'bowling_style' => 'required|in:' . implode(',', Player::getBowlingStyles()),
             'jersey_number' => 'nullable|string|max:10',
@@ -104,6 +105,9 @@ class PlayerController extends Controller
         $this->authorizePlayer($player);
 
         $playerCategories = Player::getPlayerCategories();
+        if (!in_array($player->player_category, $playerCategories, true)) {
+            $playerCategories[] = $player->player_category;
+        }
         $battingStyles = Player::getBattingStyles();
         $bowlingStyles = Player::getBowlingStyles();
 
@@ -126,7 +130,7 @@ class PlayerController extends Controller
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
             'date_of_birth' => 'required|date|before:today',
-            'player_category' => 'required|in:' . implode(',', Player::getPlayerCategories()),
+            'player_category' => ['required', Rule::in(Player::getPlayerCategories(true))],
             'batting_style' => 'required|in:' . implode(',', Player::getBattingStyles()),
             'bowling_style' => 'required|in:' . implode(',', Player::getBowlingStyles()),
             'jersey_number' => 'nullable|string|max:10',

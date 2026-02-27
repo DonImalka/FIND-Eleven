@@ -11,7 +11,9 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="{{ route('home') }}" class="nav-logo">⚾ Find11</a>
+            <a href="{{ route('home') }}" class="nav-logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Find11 Logo" class="logo-img">
+            </a>
             <ul class="nav-menu">
                 <li><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                 <li><a href="{{ route('about') }}" class="nav-link">About</a></li>

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\School;
 use App\Models\Player;
+use Database\Seeders\PlayerCategorySeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -17,6 +18,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Ensure default player categories exist
+        $this->call(PlayerCategorySeeder::class);
+
         // Create Admin User
         $admin = User::create([
             'name' => 'System Admin',

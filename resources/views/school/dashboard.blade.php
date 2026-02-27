@@ -1,122 +1,115 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('School Dashboard') }}
-        </h2>
-    </x-slot>
+    <x-slot name="title">School Dashboard</x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div>
             {{-- Flash Messages --}}
             @if(session('success'))
-                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                <div class="alert success">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
                     {{ session('success') }}
                 </div>
             @endif
 
             {{-- School Info Card --}}
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="text-2xl font-bold text-gray-900">{{ $school->school_name }}</h3>
-                            <p class="text-gray-600 mt-1">{{ $school->district }}, {{ $school->province }}</p>
-                            <p class="text-sm text-gray-500 mt-2">{{ $school->school_type }} School</p>
-                        </div>
-                        <span class="px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
-                            Approved
-                        </span>
+            <div class="info-card mb-8">
+                <div class="info-card-header">
+                    <div>
+                        <h3 class="info-title">{{ $school->school_name }}</h3>
+                        <p class="info-subtitle">📍 {{ $school->district }}, {{ $school->province }}</p>
+                        <p class="info-subtitle">🏫 {{ $school->school_type }} School</p>
                     </div>
+                    <span class="badge success">✓ Approved</span>
                 </div>
             </div>
 
             {{-- Statistics Cards --}}
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-blue-50 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6">
-                        <div class="text-blue-600 text-sm font-medium">Total Players</div>
-                        <div class="text-3xl font-bold text-blue-700">{{ $totalPlayers }}</div>
-                    </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-label">Total Players</div>
+                    <div class="stat-value">{{ $totalPlayers }}</div>
                 </div>
 
-                @foreach(['U13', 'U15', 'U17', 'U19'] as $category)
-                    <div class="bg-gray-50 overflow-hidden shadow-sm sm:rounded-lg">
-                        <div class="p-6">
-                            <div class="text-gray-600 text-sm font-medium">{{ $category }} Players</div>
-                            <div class="text-2xl font-bold text-gray-700">{{ $playersByCategory[$category] ?? 0 }}</div>
-                        </div>
+                @foreach(['U13' => 'indigo', 'U15' => 'purple', 'U17' => 'green', 'U19' => 'yellow'] as $category => $color)
+                    <div class="stat-card {{ $color }}">
+                        <div class="stat-icon">🏏</div>
+                        <div class="stat-label">{{ $category }} Players</div>
+                        <div class="stat-value">{{ $playersByCategory[$category] ?? 0 }}</div>
                     </div>
                 @endforeach
             </div>
 
             {{-- Quick Links --}}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <a href="{{ route('school.players.create') }}" class="bg-indigo-600 text-white overflow-hidden shadow-sm sm:rounded-lg hover:bg-indigo-700 transition">
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold">+ Add New Player</h3>
-                        <p class="text-indigo-100 text-sm mt-1">Register a new player for your school</p>
-                    </div>
+            <h3 class="section-title">Quick Actions</h3>
+            <div class="stats-grid mb-8">
+                <a href="{{ route('school.players.create') }}" class="modern-card" style="text-decoration: none; padding: 24px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white;">
+                    <div style="font-size: 2rem; margin-bottom: 12px;">➕</div>
+                    <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 8px;">Add New Player</h3>
+                    <p style="opacity: 0.95; font-size: 0.875rem;">Register a new player for your school</p>
                 </a>
 
-                <a href="{{ route('school.players.index') }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition">
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold text-gray-900">Manage Players</h3>
-                        <p class="text-gray-600 text-sm mt-1">View and manage all your players</p>
-                    </div>
+                <a href="{{ route('school.players.index') }}" class="modern-card" style="text-decoration: none; padding: 24px;">
+                    <div style="font-size: 2rem; margin-bottom: 12px;">🏏</div>
+                    <h3 style="font-size: 1.125rem; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">Manage Players</h3>
+                    <p style="color: #64748b; font-size: 0.875rem;">View and manage all your players</p>
                 </a>
 
-                <a href="{{ route('school.profile.index') }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition">
-                    <div class="p-6">
-                        <h3 class="text-lg font-semibold text-gray-900">School Profile</h3>
-                        <p class="text-gray-600 text-sm mt-1">View and update school information</p>
-                    </div>
+                <a href="{{ route('school.profile.index') }}" class="modern-card" style="text-decoration: none; padding: 24px;">
+                    <div style="font-size: 2rem; margin-bottom: 12px;">⚙️</div>
+                    <h3 style="font-size: 1.125rem; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">School Profile</h3>
+                    <p style="color: #64748b; font-size: 0.875rem;">View and update school information</p>
                 </a>
             </div>
 
             {{-- Recent Players --}}
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold text-gray-900">Recent Players</h3>
-                        <a href="{{ route('school.players.index') }}" class="text-indigo-600 hover:text-indigo-900 text-sm">
-                            View All →
-                        </a>
+            <h3 class="section-title">Recent Players</h3>
+            <div class="modern-table-container">
+                <div style="padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: #1e3a8a;">Latest Registrations</h3>
+                        <a href="{{ route('school.players.index') }}" class="btn btn-primary">View All →</a>
                     </div>
 
                     @if($recentPlayers->count() > 0)
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
+                        <table class="modern-table">
+                            <thead>
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age Category</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player Category</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Added</th>
+                                    <th>Name</th>
+                                    <th>Age Category</th>
+                                    <th>Player Category</th>
+                                    <th>Added</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tbody>
                                 @foreach($recentPlayers as $player)
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <a href="{{ route('school.players.show', $player) }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-900">
+                                        <td>
+                                            <a href="{{ route('school.players.show', $player) }}" style="color: #2563eb; font-weight: 600; text-decoration: none;">
                                                 {{ $player->full_name }}
                                             </a>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        <td>
+                                            <span class="badge success" style="font-size: 0.75rem;">
                                                 {{ $player->age_category }}
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $player->player_category }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $player->created_at->diffForHumans() }}</td>
+                                        <td>{{ $player->player_category }}</td>
+                                        <td style="color: #64748b;">{{ $player->created_at->diffForHumans() }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     @else
-                        <p class="text-gray-500">No players registered yet. <a href="{{ route('school.players.create') }}" class="text-indigo-600 hover:text-indigo-900">Add your first player</a>.</p>
+                        <div class="alert info">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                            </svg>
+                            No players registered yet. <a href="{{ route('school.players.create') }}" style="color: #2563eb; font-weight: 600;">Add your first player</a>.
+                        </div>
                     @endif
                 </div>
             </div>
-        </div>
     </div>
 </x-app-layout>
