@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterSelectionController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\SchoolController as AdminSchoolController;
 use App\Http\Controllers\Admin\PlayerController as AdminPlayerController;
+use App\Http\Controllers\Admin\PlayerCategoryController as AdminPlayerCategoryController;
 use App\Http\Controllers\School\DashboardController as SchoolDashboardController;
 use App\Http\Controllers\School\ProfileController as SchoolProfileController;
 use App\Http\Controllers\School\PlayerController as SchoolPlayerController;
@@ -81,6 +82,9 @@ Route::prefix('admin')
         // Player Management (Read-only)
         Route::get('/players', [AdminPlayerController::class, 'index'])->name('players.index');
         Route::get('/players/{player}', [AdminPlayerController::class, 'show'])->name('players.show');
+
+        // Player Category Management
+        Route::resource('player-categories', AdminPlayerCategoryController::class)->except(['show']);
     });
 
 /*

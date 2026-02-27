@@ -67,6 +67,14 @@
                     </svg>
                     <span x-show="sidebarOpen" class="sidebar-text">All Players</span>
                 </a>
+
+                <a href="{{ route('admin.player-categories.index') }}" 
+                   class="sidebar-link {{ request()->routeIs('admin.player-categories.*') ? 'active' : '' }}">
+                    <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10M7 12h6m-6 5h10M5 7a1 1 0 11-2 0 1 1 0 012 0zm0 5a1 1 0 11-2 0 1 1 0 012 0zm0 5a1 1 0 11-2 0 1 1 0 012 0z"/>
+                    </svg>
+                    <span x-show="sidebarOpen" class="sidebar-text">Player Categories</span>
+                </a>
             @endif
 
             {{-- School Navigation --}}

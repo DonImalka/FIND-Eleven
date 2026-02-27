@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Schema;
+use App\Models\PlayerCategory;
 
 class Player extends Model
 {
@@ -105,9 +107,9 @@ class Player extends Model
     }
 
     /**
-     * Get all player categories
+     * Get default player categories
      */
-    public static function getPlayerCategories(): array
+    public static function getDefaultPlayerCategories(): array
     {
         return [
             self::CATEGORY_TOP_ORDER_BATTER,
@@ -119,6 +121,32 @@ class Player extends Model
             self::CATEGORY_FAST_BOWLING_ALLROUNDER,
             self::CATEGORY_SPIN_ALLROUNDER,
         ];
+    }
+
+    /**
+     * Get all player categories
+     */
+    public static function getPlayerCategories(bool $includeInactive = false): array
+    {
+        if (Schema::hasTable('player_categories')) {
+            $query = PlayerCategory::query();
+
+            if (!$includeInactive) {
+                $query->where('is_active', true);
+            }
+
+            $categories = $query
+                ->orderByDesc('is_default')
+                ->orderBy('name')
+                ->pluck('name')
+                ->toArray();
+
+            if (!empty($categories)) {
+                return $categories;
+            }
+        }
+
+        return self::getDefaultPlayerCategories();
     }
 
     /**

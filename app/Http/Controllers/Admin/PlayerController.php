@@ -38,7 +38,7 @@ class PlayerController extends Controller
         $players = $query->paginate(20);
         $schools = School::where('status', School::STATUS_APPROVED)->get();
         $ageCategories = Player::getAgeCategories();
-        $playerCategories = Player::getPlayerCategories();
+        $playerCategories = Player::getPlayerCategories(true);
 
         return view('admin.players.index', compact(
             'players',

@@ -26,6 +26,9 @@
                         <x-nav-link :href="route('admin.players.index')" :active="request()->routeIs('admin.players.index')">
                             {{ __('All Players') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.player-categories.index')" :active="request()->routeIs('admin.player-categories.*')">
+                            {{ __('Player Categories') }}
+                        </x-nav-link>
                     @endif
 
                     {{-- School Navigation --}}
@@ -112,6 +115,9 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.players.index')" :active="request()->routeIs('admin.players.index')">
                     {{ __('All Players') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.player-categories.index')" :active="request()->routeIs('admin.player-categories.*')">
+                    {{ __('Player Categories') }}
                 </x-responsive-nav-link>
             @endif
 
