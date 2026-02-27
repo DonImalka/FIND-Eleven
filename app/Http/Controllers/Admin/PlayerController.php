@@ -35,16 +35,21 @@ class PlayerController extends Controller
             $query->where('player_category', $request->player_category);
         }
 
-        $players = $query->paginate(20);
-        $schools = School::where('status', School::STATUS_APPROVED)->get();
+        // Group players by school
+        $allPlayers = $query->get();
+        $playersBySchool = $allPlayers->groupBy('school_id');
+
+        $schools = School::where('status', School::STATUS_APPROVED)->orderBy('school_name')->get();
         $ageCategories = Player::getAgeCategories();
-        $playerCategories = Player::getPlayerCategories();
+        $playerCategories = Player::getPlayerCategories(true);
+        $totalPlayers = $allPlayers->count();
 
         return view('admin.players.index', compact(
-            'players',
+            'playersBySchool',
             'schools',
             'ageCategories',
-            'playerCategories'
+            'playerCategories',
+            'totalPlayers'
         ));
     }
 

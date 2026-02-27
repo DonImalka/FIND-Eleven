@@ -6,12 +6,18 @@ use App\Http\Controllers\Auth\RegisterSelectionController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\SchoolController as AdminSchoolController;
 use App\Http\Controllers\Admin\PlayerController as AdminPlayerController;
+use App\Http\Controllers\Admin\PlayerCategoryController as AdminPlayerCategoryController;
+use App\Http\Controllers\Admin\TournamentController as AdminTournamentController;
+use App\Http\Controllers\Admin\MatchController as AdminMatchController;
 use App\Http\Controllers\School\DashboardController as SchoolDashboardController;
 use App\Http\Controllers\School\ProfileController as SchoolProfileController;
 use App\Http\Controllers\School\PlayerController as SchoolPlayerController;
+use App\Http\Controllers\School\MatchController as SchoolMatchController;
+use App\Http\Controllers\School\LiveScoringController;
 use App\Http\Controllers\Player\DashboardController as PlayerDashboardController;
 use App\Http\Controllers\Website\HomeController;
 use App\Http\Controllers\Website\AboutController;
+use App\Http\Controllers\Website\LiveScoreController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +32,11 @@ use Illuminate\Support\Facades\Route;
 // Public Website Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'index'])->name('about');
+
+// Live Scores (public)
+Route::get('/live-scores', [LiveScoreController::class, 'index'])->name('live-scores.index');
+Route::get('/live-scores/{cricketMatch}', [LiveScoreController::class, 'show'])->name('live-scores.show');
+Route::get('/live-scores/{cricketMatch}/data', [LiveScoreController::class, 'data'])->name('live-scores.data');
 
 // Registration Routes
 Route::get('/register', [RegisterSelectionController::class, 'index'])
@@ -81,6 +92,20 @@ Route::prefix('admin')
         // Player Management (Read-only)
         Route::get('/players', [AdminPlayerController::class, 'index'])->name('players.index');
         Route::get('/players/{player}', [AdminPlayerController::class, 'show'])->name('players.show');
+
+        // Player Category Management
+        Route::resource('player-categories', AdminPlayerCategoryController::class)->except(['show']);
+
+        // Tournament Management
+        Route::resource('tournaments', AdminTournamentController::class);
+
+        // Match Management
+        Route::get('/matches/create', [AdminMatchController::class, 'create'])->name('matches.create');
+        Route::post('/matches', [AdminMatchController::class, 'store'])->name('matches.store');
+        Route::get('/matches/{cricketMatch}', [AdminMatchController::class, 'show'])->name('matches.show');
+        Route::get('/matches/{cricketMatch}/start', [AdminMatchController::class, 'startForm'])->name('matches.start-form');
+        Route::post('/matches/{cricketMatch}/start', [AdminMatchController::class, 'start'])->name('matches.start');
+        Route::post('/matches/{cricketMatch}/complete', [AdminMatchController::class, 'complete'])->name('matches.complete');
     });
 
 /*
@@ -104,6 +129,17 @@ Route::prefix('school')
 
         // Player Management (CRUD)
         Route::resource('players', SchoolPlayerController::class);
+
+        // Match Management
+        Route::get('/matches', [SchoolMatchController::class, 'index'])->name('matches.index');
+        Route::get('/matches/{cricketMatch}', [SchoolMatchController::class, 'show'])->name('matches.show');
+        Route::get('/matches/{cricketMatch}/squad', [SchoolMatchController::class, 'editSquad'])->name('matches.squad');
+        Route::put('/matches/{cricketMatch}/squad', [SchoolMatchController::class, 'updateSquad'])->name('matches.squad.update');
+
+        // Live Scoring
+        Route::get('/matches/{cricketMatch}/score', [LiveScoringController::class, 'show'])->name('matches.score');
+        Route::post('/matches/{cricketMatch}/score', [LiveScoringController::class, 'update'])->name('matches.score.update');
+        Route::post('/matches/{cricketMatch}/switch-innings', [LiveScoringController::class, 'switchInnings'])->name('matches.switch-innings');
     });
 
 /*

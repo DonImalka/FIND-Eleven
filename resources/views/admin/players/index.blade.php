@@ -56,56 +56,87 @@
                 </div>
             </div>
 
-            {{-- Players Table --}}
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    @if($players->count() > 0)
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">School</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age Category</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player Category</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Styles</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach($players as $player)
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ $player->full_name }}</div>
-                                            <div class="text-sm text-gray-500">Jersey #{{ $player->jersey_number ?? 'N/A' }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $player->school->school_name }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                {{ $player->age_category }}
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $player->player_category }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-500">{{ $player->batting_style }}</div>
-                                            <div class="text-sm text-gray-400">{{ $player->bowling_style }}</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="{{ route('admin.players.show', $player) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
-                        {{-- Pagination --}}
-                        <div class="mt-4">
-                            {{ $players->links() }}
-                        </div>
-                    @else
-                        <p class="text-gray-500">No players found.</p>
-                    @endif
-                </div>
+            {{-- Total Players Count --}}
+            <div class="mb-4 flex items-center justify-between">
+                <p class="text-sm text-gray-600">
+                    Total: <span class="font-semibold text-gray-800">{{ $totalPlayers }}</span> players across
+                    <span class="font-semibold text-gray-800">{{ $playersBySchool->count() }}</span> schools
+                </p>
             </div>
+
+            {{-- Players Grouped by School --}}
+            @if($playersBySchool->count() > 0)
+                @foreach($playersBySchool as $schoolId => $players)
+                    @php $school = $players->first()->school; @endphp
+                    <div x-data="{ open: true }" class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
+                        {{-- School Header --}}
+                        <button @click="open = !open" class="w-full flex items-center justify-between p-5 bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 transition text-left">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">
+                                    {{ strtoupper(substr($school->school_name, 0, 2)) }}
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800">{{ $school->school_name }}</h3>
+                                    <p class="text-xs text-gray-500">{{ $school->district }}, {{ $school->province }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-sm font-semibold rounded-full">
+                                    {{ $players->count() }} {{ Str::plural('player', $players->count()) }}
+                                </span>
+                                <svg :class="open ? 'rotate-180' : ''" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                        </button>
+
+                        {{-- Players Table --}}
+                        <div x-show="open" x-transition class="p-5">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age Category</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player Category</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Batting</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bowling</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    @foreach($players->sortBy('full_name') as $index => $player)
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-400">{{ $index + 1 }}</td>
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <div class="text-sm font-medium text-gray-900">{{ $player->full_name }}</div>
+                                                <div class="text-xs text-gray-400">Jersey #{{ $player->jersey_number ?? 'N/A' }}</div>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap">
+                                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    {{ $player->age_category }}
+                                                </span>
+                                            </td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{{ $player->player_category }}</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $player->batting_style }}</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $player->bowling_style }}</td>
+                                            <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                                                <a href="{{ route('admin.players.show', $player) }}" class="text-indigo-600 hover:text-indigo-900">View</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6">
+                        <p class="text-gray-500">No players found.</p>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </x-app-layout>
