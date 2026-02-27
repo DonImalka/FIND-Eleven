@@ -18,6 +18,7 @@
                 <li><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                 <li><a href="{{ route('about') }}" class="nav-link">About</a></li>
                 <li><a href="{{ route('live-scores.index') }}" class="nav-link">Live Scores</a></li>
+                <li><a href="{{ route('rankings.index') }}" class="nav-link">Rankings</a></li>
                 @guest
                     <li><a href="{{ route('login') }}" class="nav-link">Login</a></li>
                     <li><a href="{{ route('register') }}" class="nav-link btn-primary">Register</a></li>

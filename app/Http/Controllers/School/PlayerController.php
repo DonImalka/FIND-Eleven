@@ -22,24 +22,27 @@ class PlayerController extends Controller
         
         $query = $school->players()->latest();
 
-        // Filter by age category if provided
-        if ($request->has('age_category') && $request->age_category) {
-            $query->where('age_category', $request->age_category);
-        }
-
         // Filter by player category if provided
         if ($request->has('player_category') && $request->player_category) {
             $query->where('player_category', $request->player_category);
         }
 
-        $players = $query->paginate(15);
-        $ageCategories = Player::getAgeCategories();
+        $allPlayers = $query->get();
+
+        // Group players by age category (U15, U17, U19 only)
+        $playersByAge = [
+            'U15' => $allPlayers->where('age_category', 'U15')->sortBy('full_name'),
+            'U17' => $allPlayers->where('age_category', 'U17')->sortBy('full_name'),
+            'U19' => $allPlayers->where('age_category', 'U19')->sortBy('full_name'),
+        ];
+
         $playerCategories = Player::getPlayerCategories(true);
+        $totalPlayers = $allPlayers->count();
 
         return view('school.players.index', compact(
-            'players',
-            'ageCategories',
-            'playerCategories'
+            'playersByAge',
+            'playerCategories',
+            'totalPlayers'
         ));
     }
 

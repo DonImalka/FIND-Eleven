@@ -14,10 +14,12 @@ use App\Http\Controllers\School\ProfileController as SchoolProfileController;
 use App\Http\Controllers\School\PlayerController as SchoolPlayerController;
 use App\Http\Controllers\School\MatchController as SchoolMatchController;
 use App\Http\Controllers\School\LiveScoringController;
+use App\Http\Controllers\School\PlayerStatController;
 use App\Http\Controllers\Player\DashboardController as PlayerDashboardController;
 use App\Http\Controllers\Website\HomeController;
 use App\Http\Controllers\Website\AboutController;
 use App\Http\Controllers\Website\LiveScoreController;
+use App\Http\Controllers\Website\RankingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,6 +39,9 @@ Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/live-scores', [LiveScoreController::class, 'index'])->name('live-scores.index');
 Route::get('/live-scores/{cricketMatch}', [LiveScoreController::class, 'show'])->name('live-scores.show');
 Route::get('/live-scores/{cricketMatch}/data', [LiveScoreController::class, 'data'])->name('live-scores.data');
+
+// Rankings (public)
+Route::get('/rankings', [RankingController::class, 'index'])->name('rankings.index');
 
 // Registration Routes
 Route::get('/register', [RegisterSelectionController::class, 'index'])
@@ -129,6 +134,16 @@ Route::prefix('school')
 
         // Player Management (CRUD)
         Route::resource('players', SchoolPlayerController::class);
+
+        // Player Stats — Initial / Existing Stats
+        Route::get('/players/{player}/stats/initial', [PlayerStatController::class, 'editInitial'])->name('players.stats.initial');
+        Route::put('/players/{player}/stats/initial', [PlayerStatController::class, 'updateInitial'])->name('players.stats.initial.update');
+
+        // Player Stats — Match Performances
+        Route::get('/players/{player}/stats/add', [PlayerStatController::class, 'create'])->name('players.stats.create');
+        Route::post('/players/{player}/stats', [PlayerStatController::class, 'store'])->name('players.stats.store');
+        Route::get('/players/{player}/stats/history', [PlayerStatController::class, 'history'])->name('players.stats.history');
+        Route::delete('/players/{player}/stats/{performance}', [PlayerStatController::class, 'destroyPerformance'])->name('players.stats.destroy');
 
         // Match Management
         Route::get('/matches', [SchoolMatchController::class, 'index'])->name('matches.index');

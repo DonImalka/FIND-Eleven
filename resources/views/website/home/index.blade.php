@@ -17,6 +17,7 @@
                 <li><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                 <li><a href="{{ route('about') }}" class="nav-link">About</a></li>
                 <li><a href="{{ route('live-scores.index') }}" class="nav-link">Live Scores</a></li>
+                <li><a href="{{ route('rankings.index') }}" class="nav-link">Rankings</a></li>
                 @guest
                     <li><a href="{{ route('login') }}" class="nav-link">Login</a></li>
                     <li><a href="{{ route('register') }}" class="nav-link btn-primary">Register</a></li>
@@ -98,6 +99,117 @@
         </div>
     </section>
 
+    <!-- Island Rankings Section -->
+    <section class="rankings-section">
+        <div class="container">
+            <h2 class="section-title">🏆 Island Rankings</h2>
+            <p class="section-subtitle">Top performing school cricketers across Sri Lanka</p>
+
+            <div class="rankings-tabs" id="rankingTabs">
+                @php
+                    $icons = [
+                        'Batsman' => '🏏',
+                        'Power Hitter' => '💥',
+                        'Spinner' => '🌀',
+                        'Fast Bowler' => '⚡',
+                        'Spin All-Rounder' => '🔄',
+                        'Fast Bowling All-Rounder' => '🎯',
+                    ];
+                    $tabIndex = 0;
+                @endphp
+                @foreach($topRankings as $category => $players)
+                    <button class="ranking-tab {{ $tabIndex === 0 ? 'active' : '' }}" onclick="switchRankingTab('{{ Str::slug($category) }}', this)">
+                        {{ $icons[$category] ?? '🏅' }} {{ $category }}
+                    </button>
+                    @php $tabIndex++; @endphp
+                @endforeach
+            </div>
+
+            @php $panelIndex = 0; @endphp
+            @foreach($topRankings as $category => $players)
+                <div class="ranking-panel {{ $panelIndex === 0 ? 'active' : '' }}" id="panel-{{ Str::slug($category) }}">
+                    @if($players->isEmpty())
+                        <div class="ranking-empty">
+                            <span class="ranking-empty-icon">🏅</span>
+                            <p>No rankings available yet for {{ $category }}</p>
+                        </div>
+                    @else
+                        <div class="ranking-table-wrap">
+                            <table class="ranking-table">
+                                <thead>
+                                    <tr>
+                                        <th class="rank-col">#</th>
+                                        <th class="player-col">Player</th>
+                                        <th class="school-col">School</th>
+                                        <th class="age-col">Age</th>
+                                        @php
+                                            $isBatter = in_array($category, ['Batsman', 'Power Hitter']);
+                                            $isBowler = in_array($category, ['Fast Bowler', 'Spinner']);
+                                            $isAllRounder = in_array($category, ['Spin All-Rounder', 'Fast Bowling All-Rounder']);
+                                        @endphp
+                                        @if($isBatter || $isAllRounder)
+                                            <th class="stat-col">Runs</th>
+                                            <th class="stat-col">SR</th>
+                                        @endif
+                                        @if($isBowler || $isAllRounder)
+                                            <th class="stat-col">Wkts</th>
+                                            <th class="stat-col">Econ</th>
+                                        @endif
+                                        <th class="points-col">Points</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($players as $i => $player)
+                                        @php $rank = $i + 1; $s = $player->stats; @endphp
+                                        <tr class="{{ $rank <= 3 ? 'top-rank top-rank-' . $rank : '' }}">
+                                            <td class="rank-col">
+                                                @if($rank === 1) 🥇
+                                                @elseif($rank === 2) 🥈
+                                                @elseif($rank === 3) 🥉
+                                                @else {{ $rank }}
+                                                @endif
+                                            </td>
+                                            <td class="player-col">
+                                                <div class="player-info">
+                                                    <div class="player-avatar">{{ strtoupper(substr($player->full_name, 0, 1)) }}</div>
+                                                    <div>
+                                                        <div class="player-name">{{ $player->full_name }}</div>
+                                                        <div class="player-meta">{{ $player->batting_style }} · #{{ $player->jersey_number }}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="school-col">
+                                                <div class="school-name">{{ $player->school->school_name ?? '—' }}</div>
+                                                <div class="school-location">{{ $player->school->district ?? '' }}</div>
+                                            </td>
+                                            <td class="age-col"><span class="age-badge">{{ $player->age_category }}</span></td>
+                                            @if($isBatter || $isAllRounder)
+                                                <td class="stat-col">{{ $s->batting_runs ?? 0 }}</td>
+                                                <td class="stat-col">{{ number_format($s->batting_strike_rate ?? 0, 1) }}</td>
+                                            @endif
+                                            @if($isBowler || $isAllRounder)
+                                                <td class="stat-col">{{ $s->bowling_wickets ?? 0 }}</td>
+                                                <td class="stat-col">{{ number_format($s->bowling_economy ?? 0, 1) }}</td>
+                                            @endif
+                                            <td class="points-col">
+                                                <span class="points-badge {{ $rank <= 3 ? 'points-top' : '' }}">{{ number_format($s->ranking_points ?? 0) }}</span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </div>
+                @php $panelIndex++; @endphp
+            @endforeach
+
+            <div class="rankings-cta">
+                <a href="{{ route('rankings.index') }}" class="btn btn-rankings">View Full Rankings →</a>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="cta">
         <div class="container">
@@ -120,6 +232,7 @@
                     <li><a href="{{ route('home') }}">Home</a></li>
                     <li><a href="{{ route('about') }}">About Us</a></li>
                     <li><a href="{{ route('live-scores.index') }}">Live Scores</a></li>
+                    <li><a href="{{ route('rankings.index') }}">Rankings</a></li>
                     <li><a href="{{ route('register') }}">Register</a></li>
                     <li><a href="{{ route('login') }}">Login</a></li>
                 </ul>
@@ -143,5 +256,18 @@
             <p>&copy; 2026 Find11. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        function switchRankingTab(slug, btn) {
+            // Hide all panels
+            document.querySelectorAll('.ranking-panel').forEach(p => p.classList.remove('active'));
+            // Deactivate all tabs
+            document.querySelectorAll('.ranking-tab').forEach(t => t.classList.remove('active'));
+            // Show selected panel
+            document.getElementById('panel-' + slug).classList.add('active');
+            // Activate clicked tab
+            btn.classList.add('active');
+        }
+    </script>
 </body>
 </html>
