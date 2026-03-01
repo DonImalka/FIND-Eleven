@@ -60,6 +60,8 @@ class HelpPostController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:5000',
+            'contact_number' => 'nullable|string|max:20',
+            'contact_email' => 'nullable|email|max:255',
             'proof_document' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:5120', // 5MB max
         ]);
 
@@ -67,6 +69,8 @@ class HelpPostController extends Controller
         $helpPost->player_id = $player->id;
         $helpPost->title = $validated['title'];
         $helpPost->description = $validated['description'];
+        $helpPost->contact_number = $validated['contact_number'] ?? null;
+        $helpPost->contact_email = $validated['contact_email'] ?? null;
         $helpPost->status = HelpPost::STATUS_PENDING;
 
         // Handle file upload

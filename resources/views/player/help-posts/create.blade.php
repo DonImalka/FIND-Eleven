@@ -52,6 +52,35 @@
                     @enderror
                 </div>
 
+                {{-- Contact Details Section --}}
+                <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 18px; margin-bottom: 24px;">
+                    <p style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 14px;">📞 Contact Details <span style="color: #9CA3AF; font-weight: 400; font-size: 0.8rem;">(so people can reach you)</span></p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        {{-- Contact Number --}}
+                        <div>
+                            <label for="contact_number" style="display: block; font-size: 0.8rem; font-weight: 500; color: #374151; margin-bottom: 6px;">Contact Number</label>
+                            <input type="text" name="contact_number" id="contact_number" value="{{ old('contact_number') }}"
+                                   style="width: 100%; padding: 10px 14px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 0.875rem; outline: none;"
+                                   placeholder="e.g. +94 77 123 4567">
+                            @error('contact_number')
+                                <p style="color: #DC2626; font-size: 0.8rem; margin-top: 4px;">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Contact Email --}}
+                        <div>
+                            <label for="contact_email" style="display: block; font-size: 0.8rem; font-weight: 500; color: #374151; margin-bottom: 6px;">Email Address</label>
+                            <input type="email" name="contact_email" id="contact_email" value="{{ old('contact_email') }}"
+                                   style="width: 100%; padding: 10px 14px; border: 1px solid #D1D5DB; border-radius: 8px; font-size: 0.875rem; outline: none;"
+                                   placeholder="e.g. player@email.com">
+                            @error('contact_email')
+                                <p style="color: #DC2626; font-size: 0.8rem; margin-top: 4px;">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
                 {{-- Info Box --}}
                 <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 14px; margin-bottom: 24px;">
                     <p style="font-size: 0.8rem; color: #1E40AF;">

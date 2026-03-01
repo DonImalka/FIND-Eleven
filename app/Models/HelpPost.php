@@ -18,6 +18,8 @@ class HelpPost extends Model
         'player_id',
         'title',
         'description',
+        'contact_number',
+        'contact_email',
         'proof_document',
         'status',
         'rejection_reason',

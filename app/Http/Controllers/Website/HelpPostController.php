@@ -17,7 +17,7 @@ class HelpPostController extends Controller
      */
     public function index()
     {
-        $helpPosts = HelpPost::with(['player.school'])
+        $helpPosts = HelpPost::with(['player.school', 'player.stats'])
             ->where('status', HelpPost::STATUS_APPROVED)
             ->latest('approved_at')
             ->paginate(12);
@@ -34,10 +34,10 @@ class HelpPostController extends Controller
             abort(404);
         }
 
-        $helpPost->load('player.school');
+        $helpPost->load('player.school', 'player.stats');
 
         // Get other approved posts (excluding current) for sidebar
-        $relatedPosts = HelpPost::with(['player.school'])
+        $relatedPosts = HelpPost::with(['player.school', 'player.stats'])
             ->where('status', HelpPost::STATUS_APPROVED)
             ->where('id', '!=', $helpPost->id)
             ->latest('approved_at')
