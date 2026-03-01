@@ -79,6 +79,7 @@
                                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
                                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player</th>
                                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player Category</th>
+                                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Login Credentials</th>
                                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Batting</th>
                                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bowling</th>
                                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -94,6 +95,20 @@
                                                     </td>
                                                     <td class="px-4 py-3 whitespace-nowrap">
                                                         <span class="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-700">{{ $player->player_category }}</span>
+                                                    </td>
+                                                    <td class="px-4 py-3" x-data="{ show: false }">
+                                                        @if($player->username)
+                                                            <button @click="show = !show" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">
+                                                                <span x-show="!show">🔑 Show</span>
+                                                                <span x-show="show">🔒 Hide</span>
+                                                            </button>
+                                                            <div x-show="show" x-transition class="mt-1 bg-gray-50 border border-gray-200 rounded p-2 text-xs font-mono">
+                                                                <p><span class="text-gray-500">User:</span> {{ $player->username }}</p>
+                                                                <p><span class="text-gray-500">Pass:</span> {{ $player->plain_password }}</p>
+                                                            </div>
+                                                        @else
+                                                            <span class="text-xs text-gray-400">—</span>
+                                                        @endif
                                                     </td>
                                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $player->batting_style }}</td>
                                                     <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $player->bowling_style }}</td>

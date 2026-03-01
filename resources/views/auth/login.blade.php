@@ -1,71 +1,71 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('layouts.website')
 
-    {{-- Success Message (e.g., after school registration) --}}
-    @if(session('success'))
-        <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded text-sm">
-            {{ session('success') }}
-        </div>
-    @endif
+@section('title', 'Login — FindEleven')
 
-    {{-- Error Message (e.g., school not approved) --}}
-    @if(session('error'))
-        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-sm">
-            {{ session('error') }}
-        </div>
-    @endif
+@section('content')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+<div class="auth-page">
+    <div class="auth-page-bg"></div>
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+    <div class="auth-card">
+        <div class="auth-card-header">
+            <h2>Welcome Back</h2>
+            <p>Sign in to your FindEleven account</p>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
+        <div class="auth-card-body">
+            {{-- Session Status --}}
+            @if(session('status'))
+                <div class="flash-success">{{ session('status') }}</div>
             @endif
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
+            {{-- Success Message --}}
+            @if(session('success'))
+                <div class="flash-success">{{ session('success') }}</div>
+            @endif
 
-    {{-- Registration Links --}}
-    <div class="mt-6 pt-6 border-t border-gray-200">
-        <p class="text-sm text-gray-600 text-center mb-3">Don't have an account?</p>
-        <div class="flex justify-center">
-            <a href="{{ route('register') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm">
-                Register Now
-            </a>
+            {{-- Error Message --}}
+            @if(session('error'))
+                <div class="flash-error">{{ session('error') }}</div>
+            @endif
+
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" class="form-input" required autofocus autocomplete="username" placeholder="your@email.com">
+                    @error('email')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input id="password" type="password" name="password" class="form-input" required autocomplete="current-password" placeholder="••••••••">
+                    @error('password')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
+
+                <!-- Remember Me -->
+                <div class="form-check">
+                    <input id="remember_me" type="checkbox" name="remember">
+                    <label for="remember_me">Remember me</label>
+                </div>
+
+                <div class="auth-footer-row">
+                    @if(Route::has('password.request'))
+                        <a href="{{ route('password.request') }}" class="auth-link">Forgot password?</a>
+                    @endif
+                    <button type="submit" class="btn-gold">Log In</button>
+                </div>
+            </form>
+
+            <div class="auth-divider">
+                <p>Don't have an account?</p>
+                <a href="{{ route('register') }}" class="btn-outline">Register Now</a>
+            </div>
         </div>
     </div>
-</x-guest-layout>
+</div>
+
+@endsection

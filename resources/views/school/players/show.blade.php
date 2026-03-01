@@ -51,6 +51,35 @@
                     </div>
                 </div>
 
+                {{-- Login Credentials --}}
+                @if($player->username)
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg md:col-span-2" x-data="{ show: false }">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-lg font-semibold text-gray-900">🔑 Login Credentials</h3>
+                            <button @click="show = !show" class="text-sm font-medium text-indigo-600 hover:text-indigo-800">
+                                <span x-show="!show">Show Credentials</span>
+                                <span x-show="show">Hide Credentials</span>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-3">Share these with the player so they can log in to their account.</p>
+                        <div x-show="show" x-transition class="bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-sm space-y-2">
+                            <div>
+                                <span class="text-gray-500 text-xs uppercase tracking-wide">Username</span>
+                                <p class="text-gray-900 font-medium">{{ $player->username }}</p>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 text-xs uppercase tracking-wide">Password</span>
+                                <p class="text-gray-900 font-medium">{{ $player->plain_password }}</p>
+                            </div>
+                        </div>
+                        <div x-show="!show" class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center text-gray-400 text-sm">
+                            Click "Show Credentials" to reveal
+                        </div>
+                    </div>
+                </div>
+                @endif
+
                 {{-- Playing Style --}}
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
@@ -58,6 +87,7 @@
                         <dl class="space-y-4">
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">Player Category</dt>
+
                                 <dd class="mt-1">
                                     <span class="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-700">{{ $player->player_category }}</span>
                                 </dd>

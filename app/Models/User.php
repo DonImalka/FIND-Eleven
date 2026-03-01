@@ -84,4 +84,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(School::class);
     }
+
+    public function player(): HasOne
+    {
+        return $this->hasOne(Player::class);
+    }
 }

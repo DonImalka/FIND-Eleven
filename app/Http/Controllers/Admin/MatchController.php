@@ -7,6 +7,9 @@ use App\Models\BatterScore;
 use App\Models\BowlerScore;
 use App\Models\CricketMatch;
 use App\Models\MatchInning;
+use App\Models\Player;
+use App\Models\PlayerMatchPerformance;
+use App\Models\PlayerStat;
 use App\Models\School;
 use App\Models\Tournament;
 use Illuminate\Http\Request;
@@ -160,6 +163,8 @@ class MatchController extends Controller
 
     /**
      * Complete the match with a result summary.
+     * Auto-generates PlayerMatchPerformance records from live scoring data
+     * and recalculates each player's career stats & ranking points.
      */
     public function complete(Request $request, CricketMatch $cricketMatch)
     {
@@ -175,7 +180,143 @@ class MatchController extends Controller
             'result_summary' => $validated['result_summary'],
         ]);
 
+        // Auto-generate player stats from live scoring data
+        $this->generatePlayerStatsFromMatch($cricketMatch);
+
         return redirect()->route('admin.matches.show', $cricketMatch)
-            ->with('success', 'Match completed.');
+            ->with('success', 'Match completed. Player stats have been automatically updated.');
+    }
+
+    /**
+     * Extract batter/bowler scores from a completed live match and create
+     * PlayerMatchPerformance records, then recalculate each player's career stats.
+     */
+    private function generatePlayerStatsFromMatch(CricketMatch $cricketMatch): void
+    {
+        // Load all innings with scores
+        $cricketMatch->load([
+            'innings.batterScores',
+            'innings.bowlerScores',
+            'homeSchool',
+            'awaySchool',
+        ]);
+
+        $innings = $cricketMatch->innings;
+        if ($innings->isEmpty()) {
+            return;
+        }
+
+        // Collect every player_id that appeared in any innings
+        $playerIds = collect();
+        foreach ($innings as $inning) {
+            foreach ($inning->batterScores as $bs) {
+                $playerIds->push($bs->player_id);
+            }
+            foreach ($inning->bowlerScores as $bws) {
+                $playerIds->push($bws->player_id);
+            }
+        }
+        $playerIds = $playerIds->unique();
+
+        foreach ($playerIds as $playerId) {
+            // Skip if we already generated a performance for this player+match
+            if (PlayerMatchPerformance::where('player_id', $playerId)->where('match_id', $cricketMatch->id)->exists()) {
+                continue;
+            }
+
+            $player = Player::find($playerId);
+            if (!$player) continue;
+
+            // Aggregate batting across all innings this player batted in
+            $battingRuns = 0;
+            $battingBalls = 0;
+            $battingFours = 0;
+            $battingSixes = 0;
+            $battingNotOut = true; // assume not out unless dismissed
+            $didBat = false;
+
+            // Aggregate bowling across all innings this player bowled in
+            $bowlingBalls = 0;
+            $bowlingMaidens = 0;
+            $bowlingRunsConceded = 0;
+            $bowlingWickets = 0;
+            $didBowl = false;
+
+            // Determine opponent
+            $opponentName = null;
+            if ($player->school_id === $cricketMatch->home_school_id) {
+                $opponentName = $cricketMatch->awaySchool->school_name ?? null;
+            } elseif ($player->school_id === $cricketMatch->away_school_id) {
+                $opponentName = $cricketMatch->homeSchool->school_name ?? null;
+            }
+
+            foreach ($innings as $inning) {
+                // Check batting
+                $batterScore = $inning->batterScores->where('player_id', $playerId)->first();
+                if ($batterScore && $batterScore->status !== BatterScore::STATUS_YET_TO_BAT) {
+                    $didBat = true;
+                    $battingRuns += (int) $batterScore->runs;
+                    $battingBalls += (int) $batterScore->balls_faced;
+                    $battingFours += (int) $batterScore->fours;
+                    $battingSixes += (int) $batterScore->sixes;
+                    if ($batterScore->status === BatterScore::STATUS_OUT) {
+                        $battingNotOut = false;
+                    }
+                }
+
+                // Check bowling
+                $bowlerScore = $inning->bowlerScores->where('player_id', $playerId)->first();
+                if ($bowlerScore && floatval($bowlerScore->overs) > 0) {
+                    $didBowl = true;
+                    // Convert overs string to balls
+                    $ov = floatval($bowlerScore->overs);
+                    $fullOv = intval($ov);
+                    $partBalls = round(($ov - $fullOv) * 10);
+                    $bowlingBalls += ($fullOv * 6) + $partBalls;
+                    $bowlingMaidens += (int) $bowlerScore->maidens;
+                    $bowlingRunsConceded += (int) $bowlerScore->runs_conceded;
+                    $bowlingWickets += (int) $bowlerScore->wickets;
+                }
+            }
+
+            // Skip players who didn't bat or bowl (sat out entirely)
+            if (!$didBat && !$didBowl) {
+                continue;
+            }
+
+            // Convert total bowling balls back to overs decimal (e.g. 25 balls = 4.1)
+            $bowlingOvers = 0;
+            if ($bowlingBalls > 0) {
+                $bowlingOvers = floor($bowlingBalls / 6) + (($bowlingBalls % 6) / 10);
+            }
+
+            // Build description
+            $tournamentName = $cricketMatch->tournament->name ?? 'Match';
+            $matchDesc = $tournamentName . ' — ' . ($cricketMatch->result_summary ?? 'Completed');
+
+            PlayerMatchPerformance::create([
+                'player_id'            => $playerId,
+                'match_id'             => $cricketMatch->id,
+                'match_date'           => $cricketMatch->match_date,
+                'opponent'             => $opponentName,
+                'match_description'    => $matchDesc,
+                'batting_runs'         => $battingRuns,
+                'batting_balls_faced'  => $battingBalls,
+                'batting_fours'        => $battingFours,
+                'batting_sixes'        => $battingSixes,
+                'batting_not_out'      => $didBat ? $battingNotOut : false,
+                'bowling_overs'        => $bowlingOvers,
+                'bowling_maidens'      => $bowlingMaidens,
+                'bowling_runs_conceded'=> $bowlingRunsConceded,
+                'bowling_wickets'      => $bowlingWickets,
+                'bowling_dot_balls'    => 0,
+                'fielding_catches'     => 0,
+                'fielding_run_outs'    => 0,
+                'fielding_stumpings'   => 0,
+            ]);
+
+            // Recalculate career stats for this player
+            PlayerStat::recalculateFromPerformances($player);
+        }
     }
 }
