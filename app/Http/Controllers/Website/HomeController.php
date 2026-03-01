@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Website;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Website\PerfectElevenController;
 use App\Models\School;
 use App\Models\Player;
 use App\Models\PlayerStat;
@@ -76,11 +77,17 @@ class HomeController extends Controller
         // Ticker matches (live ones for the scrolling ticker)
         $tickerMatches = $liveMatches;
 
+        // Perfect XI for home section (all three age groups)
+        $perfectXI = [];
+        foreach ([Player::AGE_U15, Player::AGE_U17, Player::AGE_U19] as $age) {
+            $perfectXI[$age] = PerfectElevenController::buildPerfectEleven($age);
+        }
+
         return view('website.home.index', compact(
             'totalSchools', 'totalPlayers', 'totalCategories',
             'topRankings', 'featuredPlayer',
             'liveMatches', 'recentMatches', 'upcomingMatches',
-            'weeklyUpcoming', 'tickerMatches'
+            'weeklyUpcoming', 'tickerMatches', 'perfectXI'
         ));
     }
 }

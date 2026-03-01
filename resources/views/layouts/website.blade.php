@@ -44,6 +44,7 @@
             </a>
         </li>
         <li><a href="{{ route('rankings.index') }}" class="{{ request()->routeIs('rankings.*') ? 'active' : '' }}">Rankings</a></li>
+        <li><a href="{{ route('perfect-eleven.index') }}" class="{{ request()->routeIs('perfect-eleven.*') ? 'active' : '' }}">Perfect XI</a></li>
         <li><a href="{{ route('help-posts.index') }}" class="{{ request()->routeIs('help-posts.*') ? 'active' : '' }}">Help Posts</a></li>
     </ul>
 

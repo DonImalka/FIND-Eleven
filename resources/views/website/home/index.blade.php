@@ -4,6 +4,7 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+<link rel="stylesheet" href="{{ asset('css/perfect-eleven.css') }}">
 @endpush
 
 @section('content')
@@ -183,6 +184,72 @@
     </div>
 </div>
 
+<!-- ── PERFECT XI ── -->
+<div class="section-divider">
+    <span class="divider-text">Perfect XI — Best Island XI</span>
+    <div class="divider-line"></div>
+    <span class="divider-num">11 Players</span>
+</div>
+
+<div class="p11-home-section">
+    <div class="p11-home-header">
+        <h2 class="section-title">Perfect <span>XI</span></h2>
+        <div style="display:flex;align-items:center;gap:16px;">
+            <div class="p11-home-tabs">
+                @foreach([App\Models\Player::AGE_U15, App\Models\Player::AGE_U17, App\Models\Player::AGE_U19] as $hAge)
+                    <button class="p11-home-tab {{ $hAge === App\Models\Player::AGE_U19 ? 'active' : '' }}" onclick="switchHomeAge('{{ $hAge }}', this)">{{ $hAge }}</button>
+                @endforeach
+            </div>
+            <a href="{{ route('perfect-eleven.index') }}" class="see-all">View Full XI</a>
+        </div>
+    </div>
+
+    @foreach([App\Models\Player::AGE_U15, App\Models\Player::AGE_U17, App\Models\Player::AGE_U19] as $hAge)
+        <div class="p11-home-panel {{ $hAge === App\Models\Player::AGE_U19 ? '' : 'hidden' }}" id="home-p11-{{ $hAge }}">
+            @php
+                $allHomePlayers = collect();
+                foreach ($perfectXI[$hAge] as $slot) {
+                    foreach ($slot['players'] as $p) { $allHomePlayers->push($p); }
+                }
+            @endphp
+
+            @if($allHomePlayers->isNotEmpty())
+                <div class="p11-squad-card p11-squad-card--home">
+                    <div class="p11-squad-title">
+                        <span class="p11-squad-badge">🏏</span>
+                        <span>{{ $hAge }} Perfect XI</span>
+                    </div>
+                    <div class="p11-squad-list">
+                        @foreach($allHomePlayers as $idx => $player)
+                            @php $s = $player->stats; @endphp
+                            <div class="p11-squad-row">
+                                <div class="p11-squad-num">{{ $idx + 1 }}</div>
+                                <div class="p11-squad-avatar">
+                                    <span>{{ strtoupper(substr($player->full_name, 0, 1)) }}</span>
+                                </div>
+                                <div class="p11-squad-info">
+                                    <div class="p11-squad-name">{{ $player->full_name }}</div>
+                                    <div class="p11-squad-meta">{{ $player->school->school_name ?? '—' }}</div>
+                                </div>
+                                <div class="p11-squad-role">{{ $player->player_category }}</div>
+                                <div class="p11-squad-pts">
+                                    <span class="p11-squad-pts-val">{{ number_format($s->ranking_points ?? 0) }}</span>
+                                    <span class="p11-squad-pts-lbl">pts</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="p11-squad-footer">{{ $allHomePlayers->count() }} of 11 positions filled</div>
+                </div>
+            @else
+                <div class="p11-squad-card p11-squad-card--home">
+                    <div class="p11-squad-empty">🏅 No qualifying players yet for {{ $hAge }}</div>
+                </div>
+            @endif
+        </div>
+    @endforeach
+</div>
+
 <!-- ── RANKINGS ── -->
 <div class="section-divider">
     <span class="divider-text">Island Rankings {{ date('Y') }}</span>
@@ -243,6 +310,14 @@
             if (group === 'all') p.classList.remove('hidden');
             else p.classList.toggle('hidden', p.dataset.group !== group);
         });
+    }
+
+    function switchHomeAge(age, btn) {
+        document.querySelectorAll('.p11-home-tab').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.p11-home-panel').forEach(p => p.classList.add('hidden'));
+        const panel = document.getElementById('home-p11-' + age);
+        if (panel) panel.classList.remove('hidden');
     }
 </script>
 @endpush

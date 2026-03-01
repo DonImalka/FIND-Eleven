@@ -22,6 +22,7 @@ use App\Http\Controllers\Website\AboutController;
 use App\Http\Controllers\Website\LiveScoreController;
 use App\Http\Controllers\Website\RankingController;
 use App\Http\Controllers\Website\HelpPostController as WebsiteHelpPostController;
+use App\Http\Controllers\Website\PerfectElevenController;
 use App\Http\Controllers\School\HelpPostController as SchoolHelpPostController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +46,9 @@ Route::get('/live-scores/{cricketMatch}/data', [LiveScoreController::class, 'dat
 
 // Rankings (public)
 Route::get('/rankings', [RankingController::class, 'index'])->name('rankings.index');
+
+// Perfect XI (public)
+Route::get('/perfect-eleven', [PerfectElevenController::class, 'index'])->name('perfect-eleven.index');
 
 // Help Posts (public)
 Route::get('/help-posts', [WebsiteHelpPostController::class, 'index'])->name('help-posts.index');
