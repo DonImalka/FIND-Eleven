@@ -64,8 +64,14 @@ class HomeController extends Controller
             ->take(6)
             ->get();
 
-        // Combine all matches for the score cards section (live first, then recent, then upcoming)
-        $allMatches = $liveMatches->concat($recentMatches)->concat($upcomingMatches)->take(6);
+        // Upcoming matches within this week (Mon–Sun)
+        $weekStart = now()->startOfWeek();
+        $weekEnd   = now()->endOfWeek();
+        $weeklyUpcoming = CricketMatch::with(['tournament', 'homeSchool', 'awaySchool'])
+            ->where('status', CricketMatch::STATUS_UPCOMING)
+            ->whereBetween('match_date', [$weekStart, $weekEnd])
+            ->orderBy('match_date')
+            ->get();
 
         // Ticker matches (live ones for the scrolling ticker)
         $tickerMatches = $liveMatches;
@@ -74,7 +80,7 @@ class HomeController extends Controller
             'totalSchools', 'totalPlayers', 'totalCategories',
             'topRankings', 'featuredPlayer',
             'liveMatches', 'recentMatches', 'upcomingMatches',
-            'allMatches', 'tickerMatches'
+            'weeklyUpcoming', 'tickerMatches'
         ));
     }
 }

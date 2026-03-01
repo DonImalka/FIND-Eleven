@@ -16,10 +16,13 @@ use App\Http\Controllers\School\MatchController as SchoolMatchController;
 use App\Http\Controllers\School\LiveScoringController;
 use App\Http\Controllers\School\PlayerStatController;
 use App\Http\Controllers\Player\DashboardController as PlayerDashboardController;
+use App\Http\Controllers\Player\HelpPostController as PlayerHelpPostController;
 use App\Http\Controllers\Website\HomeController;
 use App\Http\Controllers\Website\AboutController;
 use App\Http\Controllers\Website\LiveScoreController;
 use App\Http\Controllers\Website\RankingController;
+use App\Http\Controllers\Website\HelpPostController as WebsiteHelpPostController;
+use App\Http\Controllers\School\HelpPostController as SchoolHelpPostController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,6 +45,10 @@ Route::get('/live-scores/{cricketMatch}/data', [LiveScoreController::class, 'dat
 
 // Rankings (public)
 Route::get('/rankings', [RankingController::class, 'index'])->name('rankings.index');
+
+// Help Posts (public)
+Route::get('/help-posts', [WebsiteHelpPostController::class, 'index'])->name('help-posts.index');
+Route::get('/help-posts/{helpPost}', [WebsiteHelpPostController::class, 'show'])->name('help-posts.show');
 
 // Registration Routes
 Route::get('/register', [RegisterSelectionController::class, 'index'])
@@ -155,6 +162,12 @@ Route::prefix('school')
         Route::get('/matches/{cricketMatch}/score', [LiveScoringController::class, 'show'])->name('matches.score');
         Route::post('/matches/{cricketMatch}/score', [LiveScoringController::class, 'update'])->name('matches.score.update');
         Route::post('/matches/{cricketMatch}/switch-innings', [LiveScoringController::class, 'switchInnings'])->name('matches.switch-innings');
+
+        // Help Posts Management
+        Route::get('/help-posts', [SchoolHelpPostController::class, 'index'])->name('help-posts.index');
+        Route::get('/help-posts/{helpPost}', [SchoolHelpPostController::class, 'show'])->name('help-posts.show');
+        Route::post('/help-posts/{helpPost}/approve', [SchoolHelpPostController::class, 'approve'])->name('help-posts.approve');
+        Route::post('/help-posts/{helpPost}/reject', [SchoolHelpPostController::class, 'reject'])->name('help-posts.reject');
     });
 
 /*
@@ -171,6 +184,13 @@ Route::prefix('player')
     ->group(function () {
         // Dashboard (View-only profile)
         Route::get('/dashboard', [PlayerDashboardController::class, 'index'])->name('dashboard');
+
+        // Help Posts
+        Route::get('/help-posts', [PlayerHelpPostController::class, 'index'])->name('help-posts.index');
+        Route::get('/help-posts/create', [PlayerHelpPostController::class, 'create'])->name('help-posts.create');
+        Route::post('/help-posts', [PlayerHelpPostController::class, 'store'])->name('help-posts.store');
+        Route::get('/help-posts/{helpPost}', [PlayerHelpPostController::class, 'show'])->name('help-posts.show');
+        Route::delete('/help-posts/{helpPost}', [PlayerHelpPostController::class, 'destroy'])->name('help-posts.destroy');
     });
 
 // Include Breeze auth routes

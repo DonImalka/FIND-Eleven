@@ -145,96 +145,39 @@
     </div>
 </div>
 
-<!-- ── LIVE SCORE CARDS ── -->
+<!-- ── UPCOMING THIS WEEK ── -->
 <div style="margin-top:56px;">
     <div class="section-divider">
-        <span class="divider-text">Live Scorecards</span>
+        <span class="divider-text">This Week's Fixtures</span>
         <div class="divider-line"></div>
-        <span class="divider-num">{{ str_pad($allMatches->count(), 2, '0', STR_PAD_LEFT) }} Matches</span>
+        <span class="divider-num">{{ str_pad($weeklyUpcoming->count(), 2, '0', STR_PAD_LEFT) }} Matches</span>
     </div>
 
     <div class="section">
         <div class="section-header">
-            <h2 class="section-title">Today's <span>Matches</span></h2>
+            <h2 class="section-title">Upcoming <span>This Week</span></h2>
             <a href="{{ route('live-scores.index') }}" class="see-all">All Fixtures</a>
         </div>
 
         <div class="score-grid">
-            @forelse($allMatches as $match)
-                @if($match->status === 'live')
-                    <a href="{{ route('live-scores.show', $match) }}" class="score-card live-card" style="text-decoration:none; color:inherit;">
-                        <div class="sc-top">
-                            <span class="sc-tournament">{{ $match->tournament->name ?? 'Tournament' }} · {{ $match->overs_per_side }}-over</span>
-                            <span class="sc-status-live"><span class="live-dot"></span> Live @php $ci = $match->innings->where('is_completed', false)->first(); @endphp @if($ci) · {{ $ci->total_overs }} ov @endif</span>
-                        </div>
-                        <div class="sc-match">
-                            @php
-                                $innings = $match->innings->sortBy('inning_number');
-                                $cb = $match->innings->where('is_completed', false)->first();
-                                $cbsId = $cb ? $cb->batting_school_id : null;
-                            @endphp
-                            <div class="sc-team-row">
-                                @php $hb = $cbsId === $match->home_school_id; $hi = $innings->where('batting_school_id', $match->home_school_id)->first(); @endphp
-                                <span class="sc-team-name {{ $hb ? 'batting' : '' }}">{{ $match->homeSchool->school_name ?? 'TBD' }}</span>
-                                @if($hi)<span class="sc-score-val {{ $hb ? 'batting' : '' }}">{{ $hi->total_runs }}/{{ $hi->total_wickets }} <span class="sc-overs">({{ $hi->total_overs }})</span></span>@else<span class="sc-score-val">Yet to bat</span>@endif
-                            </div>
-                            <div class="sc-team-row">
-                                @php $ab = $cbsId === $match->away_school_id; $ai = $innings->where('batting_school_id', $match->away_school_id)->first(); @endphp
-                                <span class="sc-team-name {{ $ab ? 'batting' : '' }}">{{ $match->awaySchool->school_name ?? 'TBD' }}</span>
-                                @if($ai)<span class="sc-score-val {{ $ab ? 'batting' : '' }}">{{ $ai->total_runs }}/{{ $ai->total_wickets }} <span class="sc-overs">({{ $ai->total_overs }})</span></span>@else<span class="sc-score-val">Yet to bat</span>@endif
-                            </div>
-                        </div>
-                        <div class="sc-footer">
-                            @php
-                                $topBat = $cb ? $cb->batterScores->where('status','!=','yet_to_bat')->sortByDesc('runs')->first() : null;
-                                $compInn = $innings->where('is_completed',true)->first();
-                                $topBwl = $compInn ? $compInn->bowlerScores->sortByDesc('wickets')->first() : null;
-                            @endphp
-                            @if($topBat)<strong>{{ $topBat->player->full_name ?? '—' }} {{ $topBat->runs }}*({{ $topBat->balls_faced }})</strong>@endif
-                            @if($topBwl) {{ $topBwl->player->full_name ?? '—' }} {{ $topBwl->wickets }}/{{ $topBwl->runs_conceded }}@endif
-                            @if(!$topBat && !$topBwl) Match in progress @endif
-                        </div>
-                    </a>
-                @elseif($match->status === 'completed')
-                    <a href="{{ route('live-scores.show', $match) }}" class="score-card" style="text-decoration:none; color:inherit;">
-                        <div class="sc-top">
-                            <span class="sc-tournament">{{ $match->tournament->name ?? 'Tournament' }} · {{ $match->overs_per_side }}-over</span>
-                            <span class="sc-status-done">✓ Result</span>
-                        </div>
-                        <div class="sc-match">
-                            @php $innings = $match->innings->sortBy('inning_number'); @endphp
-                            <div class="sc-team-row">
-                                @php $hi = $innings->where('batting_school_id', $match->home_school_id)->first(); @endphp
-                                <span class="sc-team-name">{{ $match->homeSchool->school_name ?? 'TBD' }}</span>
-                                <span class="sc-score-val">{{ $hi ? $hi->total_runs.'/'.$hi->total_wickets : '—' }} @if($hi)<span class="sc-overs">({{ $hi->total_overs }})</span>@endif</span>
-                            </div>
-                            <div class="sc-team-row">
-                                @php $ai = $innings->where('batting_school_id', $match->away_school_id)->first(); @endphp
-                                <span class="sc-team-name">{{ $match->awaySchool->school_name ?? 'TBD' }}</span>
-                                <span class="sc-score-val">{{ $ai ? $ai->total_runs.'/'.$ai->total_wickets : '—' }} @if($ai)<span class="sc-overs">({{ $ai->total_overs }})</span>@endif</span>
-                            </div>
-                        </div>
-                        <div class="sc-footer"><strong>{{ $match->result_summary ?? 'Match completed' }}</strong></div>
-                    </a>
-                @elseif($match->status === 'upcoming')
-                    <div class="score-card">
-                        <div class="sc-top">
-                            <span class="sc-tournament">{{ $match->tournament->name ?? 'Tournament' }} · {{ $match->overs_per_side }}-over</span>
-                            <span class="sc-status-done" style="color:var(--gold);">⏱ {{ $match->match_date->format('d M') }}</span>
-                        </div>
-                        <div class="sc-upcoming">
-                            <div class="sc-upcoming-teams">
-                                <span class="sc-team-name" style="flex:1;">{{ $match->homeSchool->school_name ?? 'TBD' }}</span>
-                                <span class="sc-upcoming-vs">VS</span>
-                                <span class="sc-team-name" style="flex:1; text-align:right;">{{ $match->awaySchool->school_name ?? 'TBD' }}</span>
-                            </div>
-                            @if($match->venue)<div class="sc-upcoming-venue">{{ $match->venue }}</div>@endif
-                        </div>
-                        <div class="sc-footer" style="text-align:center;">Upcoming fixture</div>
+            @forelse($weeklyUpcoming as $match)
+                <div class="score-card">
+                    <div class="sc-top">
+                        <span class="sc-tournament">{{ $match->tournament->name ?? 'Tournament' }} · {{ $match->overs_per_side }}-over</span>
+                        <span class="sc-status-done" style="color:var(--gold);">📅 {{ $match->match_date->format('D, d M') }}</span>
                     </div>
-                @endif
+                    <div class="sc-upcoming">
+                        <div class="sc-upcoming-teams">
+                            <span class="sc-team-name" style="flex:1;">{{ $match->homeSchool->school_name ?? 'TBD' }}</span>
+                            <span class="sc-upcoming-vs">VS</span>
+                            <span class="sc-team-name" style="flex:1; text-align:right;">{{ $match->awaySchool->school_name ?? 'TBD' }}</span>
+                        </div>
+                        @if($match->venue)<div class="sc-upcoming-venue">📍 {{ $match->venue }}</div>@endif
+                    </div>
+                    <div class="sc-footer" style="text-align:center;">{{ $match->match_date->isToday() ? 'Today' : ($match->match_date->isTomorrow() ? 'Tomorrow' : $match->match_date->format('l')) }}</div>
+                </div>
             @empty
-                <div class="no-matches-msg"><span class="empty-icon">🏏</span><p>No matches scheduled at the moment. Check back soon!</p></div>
+                <div class="no-matches-msg"><span class="empty-icon">🏏</span><p>No upcoming matches this week. Check back soon!</p></div>
             @endforelse
         </div>
     </div>

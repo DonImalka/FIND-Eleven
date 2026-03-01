@@ -13,15 +13,22 @@ class DashboardController extends Controller
 {
     /**
      * Display player dashboard
-     * Note: Players cannot self-register, they are created by schools
-     * This dashboard shows their profile information
      */
     public function index()
     {
-        // For now, players don't have their own user accounts
-        // They are managed by schools
-        // This could be expanded later if players get their own accounts
+        $user = auth()->user();
+        $player = $user->player;
 
-        return view('player.dashboard');
+        $helpPostCount = 0;
+        $pendingCount = 0;
+        $approvedCount = 0;
+
+        if ($player) {
+            $helpPostCount = $player->helpPosts()->count();
+            $pendingCount = $player->helpPosts()->where('status', 'pending')->count();
+            $approvedCount = $player->helpPosts()->where('status', 'approved')->count();
+        }
+
+        return view('player.dashboard', compact('player', 'helpPostCount', 'pendingCount', 'approvedCount'));
     }
 }

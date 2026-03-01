@@ -4,7 +4,10 @@ namespace App\Http\Controllers\School;
 
 use App\Http\Controllers\Controller;
 use App\Models\Player;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 /**
@@ -82,10 +85,34 @@ class PlayerController extends Controller
         $validated['age_category'] = Player::calculateAgeCategory($validated['date_of_birth']);
         $validated['school_id'] = $school->id;
 
+        // Generate random username and password for the player account
+        $username = Str::slug($validated['full_name'], '_') . '_' . rand(1000, 9999);
+        $plainPassword = Str::random(8);
+
+        // Ensure unique email/username
+        while (User::where('email', $username . '@player.findeleven.lk')->exists()) {
+            $username = Str::slug($validated['full_name'], '_') . '_' . rand(1000, 9999);
+        }
+
+        $playerEmail = $username . '@player.findeleven.lk';
+
+        // Create the user account
+        $user = User::create([
+            'name' => $validated['full_name'],
+            'email' => $playerEmail,
+            'password' => Hash::make($plainPassword),
+            'role' => User::ROLE_PLAYER,
+            'email_verified_at' => now(),
+        ]);
+
+        $validated['user_id'] = $user->id;
+        $validated['username'] = $playerEmail;
+        $validated['plain_password'] = $plainPassword;
+
         Player::create($validated);
 
         return redirect()->route('school.players.index')
-            ->with('success', 'Player created successfully.');
+            ->with('success', 'Player created successfully. You can view login credentials in the players list.');
     }
 
     /**

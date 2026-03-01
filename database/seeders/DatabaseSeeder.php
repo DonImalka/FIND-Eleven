@@ -9,6 +9,7 @@ use Database\Seeders\PlayerCategorySeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -77,10 +78,31 @@ class DatabaseSeeder extends Seeder
             ['full_name' => 'Minod Bhanuka', 'date_of_birth' => '2012-06-18', 'player_category' => Player::CATEGORY_POWER_HITTER, 'batting_style' => Player::BATTING_LEFT_HAND, 'bowling_style' => Player::BOWLING_DOES_NOT_BOWL, 'jersey_number' => '20'],
         ];
 
+        $samplePlayerUser = null;
         foreach ($royalPlayers as $playerData) {
             $playerData['school_id'] = $school->id;
             $playerData['age_category'] = Player::calculateAgeCategory($playerData['date_of_birth']);
+
+            // Create player user account
+            $username = Str::slug($playerData['full_name'], '_') . '_' . rand(1000, 9999);
+            $playerEmail = $username . '@player.findeleven.lk';
+            $playerUser = User::create([
+                'name' => $playerData['full_name'],
+                'email' => $playerEmail,
+                'password' => Hash::make('password'),
+                'role' => User::ROLE_PLAYER,
+                'email_verified_at' => now(),
+            ]);
+            $playerData['user_id'] = $playerUser->id;
+            $playerData['username'] = $playerEmail;
+            $playerData['plain_password'] = 'password';
+
             Player::create($playerData);
+
+            // Store first player for login info
+            if (!$samplePlayerUser) {
+                $samplePlayerUser = $playerUser;
+            }
         }
 
         // Create a Second Approved School for testing matches
@@ -132,6 +154,21 @@ class DatabaseSeeder extends Seeder
         foreach ($trinityPlayers as $playerData) {
             $playerData['school_id'] = $trinitySchool->id;
             $playerData['age_category'] = Player::calculateAgeCategory($playerData['date_of_birth']);
+
+            // Create player user account
+            $username = Str::slug($playerData['full_name'], '_') . '_' . rand(1000, 9999);
+            $playerEmail = $username . '@player.findeleven.lk';
+            $playerUser = User::create([
+                'name' => $playerData['full_name'],
+                'email' => $playerEmail,
+                'password' => Hash::make('password'),
+                'role' => User::ROLE_PLAYER,
+                'email_verified_at' => now(),
+            ]);
+            $playerData['user_id'] = $playerUser->id;
+            $playerData['username'] = $playerEmail;
+            $playerData['plain_password'] = 'password';
+
             Player::create($playerData);
         }
 
@@ -145,5 +182,8 @@ class DatabaseSeeder extends Seeder
         $this->command->info('Admin: admin@find11.com / password');
         $this->command->info('School (Royal College): royal@school.lk / password');
         $this->command->info('School (Trinity College): trinity@school.lk / password');
+        if ($samplePlayerUser) {
+            $this->command->info('Player (Sample): ' . $samplePlayerUser->email . ' / password');
+        }
     }
 }

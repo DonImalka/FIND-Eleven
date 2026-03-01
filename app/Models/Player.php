@@ -53,6 +53,7 @@ class Player extends Model
      */
     protected $fillable = [
         'school_id',
+        'user_id',
         'full_name',
         'date_of_birth',
         'age_category',
@@ -60,6 +61,8 @@ class Player extends Model
         'batting_style',
         'bowling_style',
         'jersey_number',
+        'username',
+        'plain_password',
     ];
 
     /**
@@ -70,6 +73,14 @@ class Player extends Model
     protected $casts = [
         'date_of_birth' => 'date',
     ];
+
+    /**
+     * Get the user account for this player
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Get the school that owns the player
@@ -93,6 +104,14 @@ class Player extends Model
     public function matchPerformances(): HasMany
     {
         return $this->hasMany(PlayerMatchPerformance::class)->orderByDesc('match_date');
+    }
+
+    /**
+     * Get the player's help posts
+     */
+    public function helpPosts(): HasMany
+    {
+        return $this->hasMany(HelpPost::class);
     }
 
     /**
