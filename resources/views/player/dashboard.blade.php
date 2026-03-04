@@ -3,41 +3,62 @@
 
     <div>
         {{-- Welcome Card --}}
-        <div class="welcome-card mb-8">
+        <div class="welcome-card" style="margin-bottom: 32px;">
             <h3>Welcome, {{ auth()->user()->name }}! 🏏</h3>
-            <p style="margin-top: 12px;">
-                This is your player dashboard. You can create help posts to request support and share your story.
-            </p>
+            <p>This is your player dashboard. You can create help posts to request support and share your story.</p>
         </div>
 
         @if(session('error'))
-            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <div class="alert danger">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="8" cy="8" r="6.5"/>
+                    <path d="M8 5v4M8 11v.5"/>
+                </svg>
                 {{ session('error') }}
             </div>
         @endif
 
-        {{-- Stats Row --}}
         @if($player)
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
-                <div class="info-card" style="text-align: center; padding: 24px;">
-                    <div style="font-size: 2rem; font-weight: 700; color: #4F46E5;">{{ $helpPostCount }}</div>
-                    <div style="font-size: 0.875rem; color: #6B7280; margin-top: 4px;">Total Help Posts</div>
+            {{-- Stats Row --}}
+            <div class="sec-head">
+                <span class="sec-head-title">Your Activity</span>
+                <div class="sec-head-line"></div>
+            </div>
+
+            <div class="stats-grid" style="margin-bottom: 40px;">
+                <div class="stat-card card-total">
+                    <div class="stat-card-top">
+                        <div class="stat-card-label">Total Help Posts</div>
+                        <div class="stat-card-val">{{ $helpPostCount }}</div>
+                        <div class="stat-card-sub">All time</div>
+                    </div>
                 </div>
-                <div class="info-card" style="text-align: center; padding: 24px;">
-                    <div style="font-size: 2rem; font-weight: 700; color: #D97706;">{{ $pendingCount }}</div>
-                    <div style="font-size: 0.875rem; color: #6B7280; margin-top: 4px;">Pending Approval</div>
+                <div class="stat-card card-pending">
+                    <div class="stat-card-top">
+                        <div class="stat-card-label">Pending Approval</div>
+                        <div class="stat-card-val">{{ $pendingCount }}</div>
+                        <div class="stat-card-sub">Awaiting review</div>
+                    </div>
                 </div>
-                <div class="info-card" style="text-align: center; padding: 24px;">
-                    <div style="font-size: 2rem; font-weight: 700; color: #059669;">{{ $approvedCount }}</div>
-                    <div style="font-size: 0.875rem; color: #6B7280; margin-top: 4px;">Approved &amp; Live</div>
+                <div class="stat-card card-approved">
+                    <div class="stat-card-top">
+                        <div class="stat-card-label">Approved & Live</div>
+                        <div class="stat-card-val">{{ $approvedCount }}</div>
+                        <div class="stat-card-sub">Visible to public</div>
+                    </div>
                 </div>
             </div>
 
-            {{-- Player Info Card --}}
-            <div class="info-card">
-                <h3 class="info-title" style="margin-bottom: 24px;">Your Player Profile</h3>
+            {{-- Player Profile Info --}}
+            <div class="sec-head">
+                <span class="sec-head-title">Your Profile</span>
+                <div class="sec-head-line"></div>
+            </div>
+
+            <div class="info-card" style="margin-bottom: 32px;">
+                <h3 class="info-title" style="margin-bottom: 24px;">Player Details</h3>
                 <div class="details-list">
-                    <dl style="display: grid; grid-template-columns: auto 1fr; gap: 16px 24px;">
+                    <dl style="display: grid; grid-template-columns: auto 1fr; gap: 12px 24px;">
                         <dt>👤 Name:</dt>
                         <dd>{{ $player->full_name }}</dd>
 
@@ -45,7 +66,7 @@
                         <dd>{{ $player->school->school_name ?? '—' }}</dd>
 
                         <dt>🎂 Age Category:</dt>
-                        <dd>{{ $player->age_category }}</dd>
+                        <dd><span class="badge success">{{ $player->age_category }}</span></dd>
 
                         <dt>🏏 Category:</dt>
                         <dd>{{ $player->player_category }}</dd>
@@ -65,17 +86,17 @@
             </div>
 
             {{-- Quick Actions --}}
-            <div style="margin-top: 24px;">
-                <a href="{{ route('player.help-posts.create') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm" style="display: inline-block;">
+            <div style="display: flex; gap: 12px;">
+                <a href="{{ route('player.help-posts.create') }}" class="btn btn-primary">
                     ✍️ Create Help Post
                 </a>
-                <a href="{{ route('player.help-posts.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 text-sm" style="display: inline-block; margin-left: 8px;">
+                <a href="{{ route('player.help-posts.index') }}" class="btn btn-secondary">
                     📋 My Help Posts
                 </a>
             </div>
         @else
             <div class="info-card">
-                <p style="color: #9CA3AF;">No player profile is linked to your account. Please contact your school's cricket incharge.</p>
+                <p style="color: var(--text-muted);">No player profile is linked to your account. Please contact your school's cricket incharge.</p>
             </div>
         @endif
     </div>

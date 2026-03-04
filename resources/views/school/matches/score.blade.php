@@ -34,7 +34,7 @@
                 @csrf
 
                 {{-- Live Score Board --}}
-                <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white sm:rounded-lg mb-4 p-4">
+                <div class="bg-gradient-to-r from-[#0A1628] to-[#1C3155] text-white sm:rounded-lg mb-4 p-4">
                     <div class="text-center">
                         <p class="text-xs uppercase tracking-wider opacity-80">{{ $currentInning->battingSchool->school_name }} — {{ $currentInning->inning_number == 1 ? '1st' : '2nd' }} Innings</p>
                         <div class="text-4xl font-black mt-1">
@@ -237,9 +237,9 @@
                         {{-- Run buttons --}}
                         <div class="grid grid-cols-4 md:grid-cols-7 gap-2">
                             <button type="button" @click="scoreBall(0, 'run')" class="py-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-lg transition active:scale-95">0</button>
-                            <button type="button" @click="scoreBall(1, 'run')" class="py-3 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold text-lg transition active:scale-95">1</button>
-                            <button type="button" @click="scoreBall(2, 'run')" class="py-3 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold text-lg transition active:scale-95">2</button>
-                            <button type="button" @click="scoreBall(3, 'run')" class="py-3 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold text-lg transition active:scale-95">3</button>
+                            <button type="button" @click="scoreBall(1, 'run')" class="py-3 rounded-lg bg-[#FEF9EE] hover:bg-[#FCF0D8] text-[#C8973A] font-bold text-lg transition active:scale-95">1</button>
+                            <button type="button" @click="scoreBall(2, 'run')" class="py-3 rounded-lg bg-[#FEF9EE] hover:bg-[#FCF0D8] text-[#C8973A] font-bold text-lg transition active:scale-95">2</button>
+                            <button type="button" @click="scoreBall(3, 'run')" class="py-3 rounded-lg bg-[#FEF9EE] hover:bg-[#FCF0D8] text-[#C8973A] font-bold text-lg transition active:scale-95">3</button>
                             <button type="button" @click="scoreBall(4, 'run')" class="py-3 rounded-lg bg-green-500 hover:bg-green-600 text-white font-bold text-lg transition active:scale-95">4</button>
                             <button type="button" @click="scoreBall(6, 'run')" class="py-3 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white font-bold text-lg transition active:scale-95">6</button>
                             <button type="button" @click="scoreBall(0, 'wicket')" class="py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-lg transition active:scale-95">OUT</button>
@@ -350,7 +350,7 @@
                                 </thead>
                                 <tbody class="divide-y divide-gray-100">
                                     @foreach($currentInning->bowlerScores as $bw)
-                                        <tr :class="{ 'bg-indigo-50': currentBowlerId == {{ $bw->id }} }">
+                                        <tr :class="{ 'bg-[#FEF9EE]': currentBowlerId == {{ $bw->id }} }">
                                             <td class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap">{{ $bw->player->full_name }}</td>
                                             <td class="px-2 py-2"><input type="text" name="bowlers[{{ $bw->id }}][overs]" x-model="bowlers[{{ $bw->id }}].overs" class="w-14 text-center rounded border-gray-300 text-sm"></td>
                                             <td class="px-2 py-2"><input type="number" name="bowlers[{{ $bw->id }}][maidens]" x-model.number="bowlers[{{ $bw->id }}].maidens" min="0" class="w-12 text-center rounded border-gray-300 text-sm"></td>
@@ -861,7 +861,7 @@
                     if (ball.runs === 4) return 'bg-green-100 text-green-700 border border-green-300';
                     if (ball.runs === 6) return 'bg-yellow-100 text-yellow-700 border border-yellow-300';
                     if (ball.runs === 0) return 'bg-gray-100 text-gray-500 border border-gray-200';
-                    return 'bg-blue-100 text-blue-700 border border-blue-300';
+                    return 'bg-[#FEF9EE] text-[#C8973A] border border-[#E8D5A8]';
                 },
             };
         }

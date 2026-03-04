@@ -50,7 +50,7 @@
                 <div style="margin-bottom: 20px;">
                     <h4 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 8px;">📎 Proof Document</h4>
                     <a href="{{ asset('storage/' . $helpPost->proof_document) }}" target="_blank"
-                       style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; color: #1D4ED8; font-size: 0.85rem; text-decoration: none;">
+                       style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; background: #FEF9EE; border: 1px solid #E8D5A8; border-radius: 8px; color: #C8973A; font-size: 0.85rem; text-decoration: none;">
                         📄 View Document
                     </a>
                 </div>

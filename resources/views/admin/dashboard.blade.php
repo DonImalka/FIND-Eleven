@@ -2,120 +2,258 @@
     <x-slot name="title">Admin Dashboard</x-slot>
 
     <div>
-            {{-- Flash Messages --}}
-            @if(session('success'))
-                <div class="alert success">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        {{-- Flash Messages --}}
+        @if(session('success'))
+            <div class="alert success">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="8" cy="8" r="6.5"/>
+                    <path d="M5.5 8l2 2 3.5-3.5"/>
+                </svg>
+                {{ session('success') }}
+            </div>
+        @endif
+
+        {{-- STAT CARDS --}}
+        <div class="sec-head">
+            <span class="sec-head-title">Overview</span>
+            <div class="sec-head-line"></div>
+            <span class="sec-head-sub">Season {{ date('Y') }}</span>
+        </div>
+
+        <div class="stat-row">
+            {{-- Pending --}}
+            <div class="stat-card card-pending">
+                <div class="stat-card-top">
+                    <div class="stat-card-label">Pending Schools</div>
+                    <div class="stat-card-val">{{ $pendingSchoolsCount }}</div>
+                    <div class="stat-card-sub">Awaiting approval</div>
+                    <div class="stat-card-icon">⏳</div>
+                </div>
+                <a href="{{ route('admin.schools.pending') }}" class="stat-card-footer">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
+                    Review Queue
+                </a>
+            </div>
+
+            {{-- Approved --}}
+            <div class="stat-card card-approved">
+                <div class="stat-card-top">
+                    <div class="stat-card-label">Approved Schools</div>
+                    <div class="stat-card-val">{{ $approvedSchoolsCount }}</div>
+                    <div class="stat-card-sub">Active this season</div>
+                    <div class="stat-card-icon">✓</div>
+                </div>
+                <a href="{{ route('admin.schools.index') }}" class="stat-card-footer">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
+                    View All Schools
+                </a>
+            </div>
+
+            {{-- Rejected --}}
+            <div class="stat-card card-rejected">
+                <div class="stat-card-top">
+                    <div class="stat-card-label">Rejected Schools</div>
+                    <div class="stat-card-val">{{ $rejectedSchoolsCount }}</div>
+                    <div class="stat-card-sub">Requires follow-up</div>
+                    <div class="stat-card-icon">✗</div>
+                </div>
+                <a href="{{ route('admin.schools.index') }}" class="stat-card-footer">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
+                    Review Rejected
+                </a>
+            </div>
+
+            {{-- Total Players --}}
+            <div class="stat-card card-total">
+                <div class="stat-card-top">
+                    <div class="stat-card-label">Total Players</div>
+                    <div class="stat-card-val">{{ $totalPlayersCount }}</div>
+                    <div class="stat-card-sub">Registered island-wide</div>
+                    <div class="stat-card-icon">👥</div>
+                </div>
+                <a href="{{ route('admin.players.index') }}" class="stat-card-footer">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
+                    Manage Players
+                </a>
+            </div>
+        </div>
+
+        {{-- QUICK ACTIONS --}}
+        <div class="sec-head">
+            <span class="sec-head-title">Quick Actions</span>
+            <div class="sec-head-line"></div>
+        </div>
+
+        <div class="quick-grid">
+            <a href="{{ route('admin.schools.pending') }}" class="qa-card">
+                <div class="qa-icon-wrap">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#C8973A" stroke-width="1.5">
+                        <circle cx="11" cy="11" r="9"/>
+                        <path d="M11 6v5l3 3"/>
                     </svg>
-                    {{ session('success') }}
                 </div>
-            @endif
+                <div>
+                    <div class="qa-title">Pending Approvals</div>
+                    <div class="qa-desc">Review and approve school registrations for the current season.</div>
+                </div>
+                <span class="qa-arrow">→</span>
+            </a>
 
-            {{-- Statistics Cards --}}
-            <div class="stats-grid">
-                {{-- Pending Schools --}}
-                <div class="stat-card yellow">
-                    <div class="stat-icon">⏳</div>
-                    <div class="stat-label">Pending Schools</div>
-                    <div class="stat-value">{{ $pendingSchoolsCount }}</div>
+            <a href="{{ route('admin.schools.index') }}" class="qa-card">
+                <div class="qa-icon-wrap">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#1A7A4A" stroke-width="1.5">
+                        <rect x="2" y="5" width="18" height="14" rx="1"/>
+                        <path d="M7 2v4M15 2v4M2 10h18"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="qa-title">All Schools</div>
+                    <div class="qa-desc">View and manage all registered schools across the island.</div>
+                </div>
+                <span class="qa-arrow">→</span>
+            </a>
+
+            <a href="{{ route('admin.players.index') }}" class="qa-card">
+                <div class="qa-icon-wrap">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#1A3A6A" stroke-width="1.5">
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M2 20c0-4.4 3.1-8 7-8M18 14l-4 4 2 4 6-8z"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="qa-title">All Players</div>
+                    <div class="qa-desc">View all registered players and manage their profiles and categories.</div>
+                </div>
+                <span class="qa-arrow">→</span>
+            </a>
+
+            <a href="{{ route('admin.tournaments.index') }}" class="qa-card">
+                <div class="qa-icon-wrap">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#9B1D20" stroke-width="1.5">
+                        <path d="M11 2l2.5 5.5 6 .8-4.3 4.2 1 6-5.2-2.7L5.8 18.5l1-6L2.5 8.3l6-.8z"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="qa-title">Tournaments</div>
+                    <div class="qa-desc">Create and manage tournaments, schedules, and bracket draws.</div>
+                </div>
+                <span class="qa-arrow">→</span>
+            </a>
+
+            <a href="{{ route('admin.player-categories.index') }}" class="qa-card">
+                <div class="qa-icon-wrap">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#6B3FA0" stroke-width="1.5">
+                        <path d="M3 8h16M3 12h12M3 16h8"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="qa-title">Player Categories</div>
+                    <div class="qa-desc">Configure ranking categories: Batsman, Spinner, Fast Bowler and more.</div>
+                </div>
+                <span class="qa-arrow">→</span>
+            </a>
+
+            <a href="/" class="qa-card">
+                <div class="qa-icon-wrap">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#1A7A6A" stroke-width="1.5">
+                        <path d="M5 3h12v14l-6-3-6 3V3z"/>
+                        <path d="M9 9l2 2 4-4"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="qa-title">Island Rankings</div>
+                    <div class="qa-desc">View and update the island-wide school cricket rankings table.</div>
+                </div>
+                <span class="qa-arrow">→</span>
+            </a>
+        </div>
+
+        {{-- RECENT ACTIVITY --}}
+        <div class="sec-head">
+            <span class="sec-head-title">Recent Activity</span>
+            <div class="sec-head-line"></div>
+        </div>
+
+        <div class="bottom-grid">
+            {{-- Pending Schools --}}
+            <div class="table-card">
+                <div class="table-card-head">
+                    <span class="tc-title">
+                        Recent Pending Schools
+                        <span class="tc-count">{{ $pendingSchoolsCount }}</span>
+                    </span>
+                    <a href="{{ route('admin.schools.pending') }}" class="tc-action">View All →</a>
                 </div>
 
-                {{-- Approved Schools --}}
-                <div class="stat-card green">
-                    <div class="stat-icon">✓</div>
-                    <div class="stat-label">Approved Schools</div>
-                    <div class="stat-value">{{ $approvedSchoolsCount }}</div>
-                </div>
-
-                {{-- Rejected Schools --}}
-                <div class="stat-card red">
-                    <div class="stat-icon">✗</div>
-                    <div class="stat-label">Rejected Schools</div>
-                    <div class="stat-value">{{ $rejectedSchoolsCount }}</div>
-                </div>
-
-                {{-- Total Players --}}
-                <div class="stat-card purple">
-                    <div class="stat-icon">👥</div>
-                    <div class="stat-label">Total Players</div>
-                    <div class="stat-value">{{ $totalPlayersCount }}</div>
-                </div>
-            </div>
-
-            {{-- Quick Links --}}
-            <h3 class="section-title">Quick Actions</h3>
-            <div class="stats-grid mb-8">
-                <a href="{{ route('admin.schools.pending') }}" class="modern-card" style="text-decoration: none; padding: 24px;">
-                    <div style="font-size: 2rem; margin-bottom: 12px;">⏳</div>
-                    <h3 style="font-size: 1.125rem; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">Pending Approvals</h3>
-                    <p style="color: #64748b; font-size: 0.875rem;">Review and approve school registrations</p>
-                </a>
-
-                <a href="{{ route('admin.schools.index') }}" class="modern-card" style="text-decoration: none; padding: 24px;">
-                    <div style="font-size: 2rem; margin-bottom: 12px;">🏫</div>
-                    <h3 style="font-size: 1.125rem; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">All Schools</h3>
-                    <p style="color: #64748b; font-size: 0.875rem;">View and manage all registered schools</p>
-                </a>
-
-                <a href="{{ route('admin.players.index') }}" class="modern-card" style="text-decoration: none; padding: 24px;">
-                    <div style="font-size: 2rem; margin-bottom: 12px;">🏏</div>
-                    <h3 style="font-size: 1.125rem; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">All Players</h3>
-                    <p style="color: #64748b; font-size: 0.875rem;">View all registered players</p>
-                </a>
-            </div>
-
-            {{-- Pending Schools Table --}}
-            <h3 class="section-title">Recent Pending Schools</h3>
-            <div class="modern-table-container">
-                <div style="padding: 24px;">
-                    @if($pendingSchools->count() > 0)
-                        <table class="modern-table">
-                            <thead>
+                @if($pendingSchools->count() > 0)
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>School</th>
+                                <th>District</th>
+                                <th>Registered</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($pendingSchools as $school)
                                 <tr>
-                                    <th>School Name</th>
-                                    <th>District</th>
-                                    <th>Type</th>
-                                    <th>Registered</th>
-                                    <th>Actions</th>
+                                    <td>
+                                        <div class="ml-name">{{ $school->school_name }}</div>
+                                        <div class="ml-sub">{{ $school->user->email }}</div>
+                                    </td>
+                                    <td>{{ $school->district }}</td>
+                                    <td style="color: var(--text-muted);">{{ $school->created_at->diffForHumans() }}</td>
+                                    <td>
+                                        <div style="display: flex; gap: 6px;">
+                                            <a href="{{ route('admin.schools.show', $school) }}" class="btn btn-info" style="padding: 5px 10px; font-size: 9px;">View</a>
+                                            <form action="{{ route('admin.schools.approve', $school) }}" method="POST" style="display:inline;">@csrf
+                                                <button type="submit" class="btn btn-success" style="padding: 5px 10px; font-size: 9px;">Approve</button>
+                                            </form>
+                                            <form action="{{ route('admin.schools.reject', $school) }}" method="POST" style="display:inline;">@csrf
+                                                <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 9px;">Reject</button>
+                                            </form>
+                                        </div>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($pendingSchools as $school)
-                                    <tr>
-                                        <td>
-                                            <div style="font-weight: 600; color: #1e293b;">{{ $school->school_name }}</div>
-                                            <div style="font-size: 0.875rem; color: #64748b;">{{ $school->user->email }}</div>
-                                        </td>
-                                        <td>{{ $school->district }}</td>
-                                        <td>{{ $school->school_type }}</td>
-                                        <td>{{ $school->created_at->diffForHumans() }}</td>
-                                        <td>
-                                            <div style="display: flex; gap: 8px;">
-                                                <a href="{{ route('admin.schools.show', $school) }}" class="btn btn-info" style="padding: 6px 12px; font-size: 0.8rem;">View</a>
-                                                <form action="{{ route('admin.schools.approve', $school) }}" method="POST" style="display: inline;">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-success" style="padding: 6px 12px; font-size: 0.8rem;">Approve</button>
-                                                </form>
-                                                <form action="{{ route('admin.schools.reject', $school) }}" method="POST" style="display: inline;">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.8rem;">Reject</button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @else
-                        <div class="alert info">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                            </svg>
-                            No pending schools at the moment.
-                        </div>
-                    @endif
-                </div>
+                            @endforeach
+                        </tbody>
+                    </table>
+                @else
+                    <div class="info-bar">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="8" cy="8" r="6.5"/>
+                            <path d="M8 7v5M8 5v.5"/>
+                        </svg>
+                        No pending schools at the moment.
+                    </div>
+                @endif
             </div>
+
+            {{-- Recent Schools Summary --}}
+            <div class="table-card">
+                <div class="table-card-head">
+                    <span class="tc-title">
+                        All Schools
+                        <span class="tc-count">{{ $approvedSchoolsCount + $rejectedSchoolsCount + $pendingSchoolsCount }}</span>
+                    </span>
+                    <a href="{{ route('admin.schools.index') }}" class="tc-action">Manage →</a>
+                </div>
+
+                @if($pendingSchools->count() > 0 || $approvedSchoolsCount > 0)
+                    <div class="info-bar">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="8" cy="8" r="6.5"/>
+                            <path d="M8 7v5M8 5v.5"/>
+                        </svg>
+                        {{ $approvedSchoolsCount }} approved · {{ $pendingSchoolsCount }} pending · {{ $rejectedSchoolsCount }} rejected
+                    </div>
+                @else
+                    <div class="info-bar">
+                        No schools registered yet.
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
 </x-app-layout>

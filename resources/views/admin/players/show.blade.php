@@ -34,7 +34,7 @@
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">Age Category</dt>
                                 <dd class="mt-1">
-                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-[#FEF9EE] text-[#C8973A]">
                                         {{ $player->age_category }}
                                     </span>
                                 </dd>

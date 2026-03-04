@@ -27,7 +27,7 @@
                     </div>
                     <div class="text-right">
                         @if($cricketMatch->status === 'upcoming')
-                            <span class="px-3 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-800">Upcoming</span>
+                            <span class="px-3 py-1 text-sm font-semibold rounded-full bg-[#FEF9EE] text-[#C8973A]">Upcoming</span>
                         @elseif($cricketMatch->status === 'live')
                             <span class="px-3 py-1 text-sm font-semibold rounded-full bg-red-100 text-red-800 animate-pulse">🔴 LIVE</span>
                         @elseif($cricketMatch->status === 'completed')

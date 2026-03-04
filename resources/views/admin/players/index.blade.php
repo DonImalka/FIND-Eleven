@@ -70,7 +70,7 @@
                     @php $school = $players->first()->school; @endphp
                     <div x-data="{ open: true }" class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                         {{-- School Header --}}
-                        <button @click="open = !open" class="w-full flex items-center justify-between p-5 bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 transition text-left">
+                        <button @click="open = !open" class="w-full flex items-center justify-between p-5 bg-[#FEF9EE] hover:bg-[#f5ead5] transition text-left">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">
                                     {{ strtoupper(substr($school->school_name, 0, 2)) }}
@@ -81,7 +81,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
-                                <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-sm font-semibold rounded-full">
+                                <span class="px-3 py-1 bg-[#FEF9EE] text-[#C8973A] text-sm font-semibold rounded-full">
                                     {{ $players->count() }} {{ Str::plural('player', $players->count()) }}
                                 </span>
                                 <svg :class="open ? 'rotate-180' : ''" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,7 +113,7 @@
                                                 <div class="text-xs text-gray-400">Jersey #{{ $player->jersey_number ?? 'N/A' }}</div>
                                             </td>
                                             <td class="px-4 py-3 whitespace-nowrap">
-                                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-[#FEF9EE] text-[#C8973A]">
                                                     {{ $player->age_category }}
                                                 </span>
                                             </td>

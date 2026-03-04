@@ -38,7 +38,7 @@
                             </div>
                             <div class="text-right flex flex-col items-end gap-2">
                                 @if($match->status === 'upcoming')
-                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Upcoming</span>
+                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-[#FEF9EE] text-[#C8973A]">Upcoming</span>
                                 @elseif($match->status === 'live')
                                     <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 animate-pulse">🔴 LIVE</span>
                                 @elseif($match->status === 'completed')

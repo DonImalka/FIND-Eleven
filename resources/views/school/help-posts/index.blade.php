@@ -21,12 +21,12 @@
         <div style="display: flex; gap: 8px; margin-bottom: 24px;">
             <a href="{{ route('school.help-posts.index') }}" 
                style="padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; text-decoration: none;
-                   {{ !request('status') ? 'background: #4F46E5; color: white;' : 'background: #F3F4F6; color: #374151;' }}">
+                   {{ !request('status') ? 'background: #C8973A; color: white;' : 'background: #F3F4F6; color: #374151;' }}">
                 All
             </a>
             <a href="{{ route('school.help-posts.index', ['status' => 'pending']) }}"
                style="padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; text-decoration: none;
-                   {{ request('status') === 'pending' ? 'background: #D97706; color: white;' : 'background: #F3F4F6; color: #374151;' }}">
+                   {{ request('status') === 'pending' ? 'background: #C8973A; color: white;' : 'background: #F3F4F6; color: #374151;' }}">
                 Pending
             </a>
             <a href="{{ route('school.help-posts.index', ['status' => 'approved']) }}"

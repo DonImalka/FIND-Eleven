@@ -30,7 +30,7 @@
                     <h3 class="text-lg font-bold text-gray-800">{{ $player->full_name }}</h3>
                     <p class="text-sm text-gray-500">
                         {{ $player->player_category }} ·
-                        <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800">{{ $player->age_category }}</span>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-[#FEF9EE] text-[#C8973A]">{{ $player->age_category }}</span>
                         · {{ $performances->total() }} match{{ $performances->total() !== 1 ? 'es' : '' }} recorded
                     </p>
                 </div>

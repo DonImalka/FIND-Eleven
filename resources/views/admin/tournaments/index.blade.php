@@ -36,7 +36,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $tournament->year }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if($tournament->status === 'upcoming')
-                                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Upcoming</span>
+                                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-[#FEF9EE] text-[#C8973A]">Upcoming</span>
                                         @elseif($tournament->status === 'ongoing')
                                             <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Ongoing</span>
                                         @else

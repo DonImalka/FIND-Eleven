@@ -51,7 +51,7 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             @if($category->is_default)
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Default</span>
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-[#FEF9EE] text-[#C8973A]">Default</span>
                                             @else
                                                 <span class="text-sm text-gray-500">Custom</span>
                                             @endif

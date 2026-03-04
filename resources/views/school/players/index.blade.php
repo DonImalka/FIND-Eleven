@@ -57,7 +57,7 @@
                             class="px-5 py-3 text-sm font-semibold border-b-2 rounded-t-lg transition">
                             {{ $age }}
                             <span class="ml-1 px-2 py-0.5 text-xs rounded-full"
-                                :class="activeTab === '{{ $age }}' ? 'bg-indigo-100 text-indigo-700' : 'bg-gray-100 text-gray-500'">
+                                :class="activeTab === '{{ $age }}' ? 'bg-[#FEF9EE] text-[#C8973A]' : 'bg-gray-100 text-gray-500'">
                                 {{ $playersByAge[$age]->count() }}
                             </span>
                         </button>

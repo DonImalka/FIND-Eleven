@@ -29,7 +29,7 @@
                         </div>
 
                         @if($playerCategory->is_default)
-                            <div class="mb-6 text-sm text-blue-700 bg-blue-50 border border-blue-200 rounded p-3">
+                            <div class="mb-6 text-sm text-[#C8973A] bg-[#FEF9EE] border border-[#C8973A] rounded p-3">
                                 This is a default category. It can be edited but cannot be deleted.
                             </div>
                         @endif

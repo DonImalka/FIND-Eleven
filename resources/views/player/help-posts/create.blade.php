@@ -82,8 +82,8 @@
                 </div>
 
                 {{-- Info Box --}}
-                <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 8px; padding: 14px; margin-bottom: 24px;">
-                    <p style="font-size: 0.8rem; color: #1E40AF;">
+                <div style="background: #FEF9EE; border: 1px solid #E8D5A8; border-radius: 8px; padding: 14px; margin-bottom: 24px;">
+                    <p style="font-size: 0.8rem; color: #C8973A;">
                         ℹ️ Your help post will be reviewed by your school before it becomes visible on the website. 
                         Upload any supporting documents (medical certificates, financial proof, etc.) to speed up approval.
                     </p>
@@ -94,7 +94,7 @@
                     <a href="{{ route('player.help-posts.index') }}" style="padding: 10px 20px; background: #E5E7EB; color: #374151; border-radius: 8px; font-size: 0.875rem; text-decoration: none;">
                         Cancel
                     </a>
-                    <button type="submit" style="padding: 10px 20px; background: #4F46E5; color: white; border: none; border-radius: 8px; font-size: 0.875rem; cursor: pointer;">
+                    <button type="submit" style="padding: 10px 20px; background: #C8973A; color: white; border: none; border-radius: 8px; font-size: 0.875rem; cursor: pointer;">
                         Submit Help Post
                     </button>
                 </div>
