@@ -1,29 +1,40 @@
 <x-app-layout>
     <x-slot name="title">Live Scoring</x-slot>
 
+    <style>
+        /* Dark theme override for live scoring page */
+        .main-content { background: #0F1A2E !important; }
+        .topbar { background: #0A1628 !important; border-color: rgba(255,255,255,0.05) !important; }
+        .topbar .topbar-title { color: #fff !important; }
+        .topbar .topbar-date,
+        .topbar .topbar-welcome { color: rgba(255,255,255,0.5) !important; }
+        .topbar .topbar-welcome strong { color: rgba(255,255,255,0.8) !important; }
+        .page-content { background: #0F1A2E !important; }
+    </style>
+
     <div x-data="liveScoring()" class="pb-28">
         @if(session('success'))
-            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">{{ session('success') }}</div>
+            <div class="mb-4 bg-green-900/40 border border-green-500/40 text-green-300 px-4 py-3 rounded">{{ session('success') }}</div>
         @endif
         @if(session('error'))
-            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">{{ session('error') }}</div>
+            <div class="mb-4 bg-red-900/40 border border-red-500/40 text-red-300 px-4 py-3 rounded">{{ session('error') }}</div>
         @endif
 
         {{-- Match Header --}}
-        <div class="bg-white shadow-sm sm:rounded-lg mb-4">
+        <div class="bg-[#162236] shadow-lg sm:rounded-lg mb-4 border border-white/5">
             <div class="p-4">
                 <div class="flex justify-between items-center">
                     <div>
-                        <p class="text-xs text-indigo-600 font-medium">{{ $cricketMatch->tournament->name }}</p>
-                        <h2 class="text-lg font-bold text-gray-800">{{ $cricketMatch->getTitle() }}</h2>
-                        <p class="text-sm text-gray-500">🔴 LIVE — {{ $cricketMatch->overs_per_side }} overs</p>
+                        <p class="text-xs text-[#C8973A] font-medium">{{ $cricketMatch->tournament->name }}</p>
+                        <h2 class="text-lg font-bold text-white">{{ $cricketMatch->getTitle() }}</h2>
+                        <p class="text-sm text-gray-400">🔴 LIVE — {{ $cricketMatch->overs_per_side }} overs</p>
                     </div>
-                    <a href="{{ route('school.matches.show', $cricketMatch) }}" class="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded-md hover:bg-gray-300">← Back</a>
+                    <a href="{{ route('school.matches.show', $cricketMatch) }}" class="px-3 py-1 bg-white/10 text-gray-300 text-sm rounded-md hover:bg-white/20">← Back</a>
                 </div>
                 @foreach($cricketMatch->innings->sortBy('inning_number') as $inn)
-                    <div class="mt-1 text-sm {{ $inn->is_completed ? 'text-gray-400' : 'text-gray-900 font-semibold' }}">
+                    <div class="mt-1 text-sm {{ $inn->is_completed ? 'text-gray-500' : 'text-white font-semibold' }}">
                         {{ $inn->battingSchool->school_name }}: {{ $inn->total_runs }}/{{ $inn->total_wickets }} ({{ $inn->total_overs }} ov)
-                        @if($inn->is_completed) <span class="text-xs">— completed</span> @endif
+                        @if($inn->is_completed) <span class="text-xs text-gray-500">— completed</span> @endif
                     </div>
                 @endforeach
             </div>
@@ -61,15 +72,15 @@
                     </div>
                 </div>
 
-                {{-- ======= OVER TRACKER (NEW) ======= --}}
-                <div class="bg-white shadow-sm sm:rounded-lg mb-4">
+                {{-- ======= OVER TRACKER ======= --}}
+                <div class="bg-[#162236] shadow-lg sm:rounded-lg mb-4 border border-white/5">
                     <div class="p-4">
                         {{-- State 1: No over in progress --}}
                         <template x-if="!overInProgress">
                             <div class="text-center py-6">
                                 <div class="mb-4">
-                                    <h4 class="text-sm font-bold text-gray-700 uppercase mb-2">🎯 Select Bowler & Start Over</h4>
-                                    <select x-model="currentBowlerId" class="w-full md:w-1/2 mx-auto rounded border-gray-300 text-sm font-semibold">
+                                    <h4 class="text-sm font-bold text-gray-300 uppercase mb-2">🎯 Select Bowler & Start Over</h4>
+                                    <select x-model="currentBowlerId" class="w-full md:w-1/2 mx-auto rounded bg-[#0F1A2E] border-white/10 text-white text-sm font-semibold">
                                         <option value="">— Select Bowler —</option>
                                         @foreach($currentInning->bowlerScores as $bw)
                                             <option value="{{ $bw->id }}">{{ $bw->player->full_name }}</option>
@@ -90,12 +101,12 @@
                             <div>
                                 {{-- Current bowler name --}}
                                 <div class="flex items-center justify-between mb-3">
-                                    <h4 class="text-sm font-bold text-gray-700 uppercase">
+                                    <h4 class="text-sm font-bold text-gray-300 uppercase">
                                         🎯 Over <span x-text="currentOverNumber"></span>
-                                        — <span x-text="getCurrentBowlerName()" class="text-indigo-600"></span>
+                                        — <span x-text="getCurrentBowlerName()" class="text-[#C8973A]"></span>
                                     </h4>
                                     <template x-if="currentBowlerId && bowlers[currentBowlerId]">
-                                        <div class="text-xs text-gray-500 flex gap-3">
+                                        <div class="text-xs text-gray-400 flex gap-3">
                                             <span>O: <strong x-text="bowlers[currentBowlerId].overs"></strong></span>
                                             <span>R: <strong x-text="bowlers[currentBowlerId].runs_conceded"></strong></span>
                                             <span>W: <strong x-text="bowlers[currentBowlerId].wickets"></strong></span>
@@ -113,7 +124,7 @@
                                                 <span x-text="getBallDisplay(idx)"></span>
                                             </div>
                                             {{-- Current ball arrow --}}
-                                            <div x-show="idx === legalBallsInOver && !overComplete" class="absolute -bottom-4 left-1/2 -translate-x-1/2 text-indigo-500 text-xs">▲</div>
+                                            <div x-show="idx === legalBallsInOver && !overComplete" class="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[#C8973A] text-xs">▲</div>
                                         </div>
                                     </template>
                                 </div>
@@ -121,7 +132,7 @@
                                 {{-- Extra balls (wides/no-balls) shown as small badges --}}
                                 <template x-if="extraBallsInOver.length > 0">
                                     <div class="flex items-center justify-center gap-1 mb-3">
-                                        <span class="text-xs text-gray-400 mr-1">Extras:</span>
+                                        <span class="text-xs text-gray-500 mr-1">Extras:</span>
                                         <template x-for="(eb, idx) in extraBallsInOver" :key="'eb'+idx">
                                             <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
                                                 :class="eb.type === 'wide' ? 'bg-orange-100 text-orange-600 border border-orange-300' : 'bg-yellow-100 text-yellow-700 border border-yellow-300'">
@@ -133,14 +144,14 @@
 
                                 {{-- Over Complete State --}}
                                 <template x-if="overComplete">
-                                    <div class="text-center py-4 bg-green-50 rounded-lg border border-green-200 mb-3">
-                                        <p class="text-green-700 font-bold text-lg mb-1">✅ Over Complete!</p>
-                                        <p class="text-sm text-green-600 mb-3">
+                                    <div class="text-center py-4 bg-green-900/30 rounded-lg border border-green-500/30 mb-3">
+                                        <p class="text-green-400 font-bold text-lg mb-1">✅ Over Complete!</p>
+                                        <p class="text-sm text-green-300/80 mb-3">
                                             This over: <span x-text="overRunsThisOver"></span> runs
                                         </p>
                                         <div class="mb-3">
-                                            <label class="text-sm text-gray-600 block mb-1">Select next bowler:</label>
-                                            <select x-model="nextBowlerId" class="w-full md:w-1/2 mx-auto rounded border-gray-300 text-sm font-semibold">
+                                            <label class="text-sm text-gray-400 block mb-1">Select next bowler:</label>
+                                            <select x-model="nextBowlerId" class="w-full md:w-1/2 mx-auto rounded bg-[#0F1A2E] border-white/10 text-white text-sm font-semibold">
                                                 <option value="">— Select Next Bowler —</option>
                                                 @foreach($currentInning->bowlerScores as $bw)
                                                     <option value="{{ $bw->id }}">{{ $bw->player->full_name }}</option>
@@ -161,19 +172,19 @@
                 </div>
 
                 {{-- Active Batters Selection --}}
-                <div class="bg-white shadow-sm sm:rounded-lg mb-4">
+                <div class="bg-[#162236] shadow-lg sm:rounded-lg mb-4 border border-white/5">
                     <div class="p-4">
-                        <h4 class="text-sm font-bold text-gray-700 uppercase mb-3">🏏 At the Crease</h4>
+                        <h4 class="text-sm font-bold text-gray-300 uppercase mb-3">🏏 At the Crease</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {{-- Striker --}}
                             <div class="border-2 rounded-lg p-3 cursor-pointer"
-                                :class="selectedBatter === 'striker' ? 'border-red-500 bg-red-50' : 'border-gray-200 hover:border-gray-300'"
+                                :class="selectedBatter === 'striker' ? 'border-red-500 bg-red-500/10' : 'border-white/10 hover:border-white/20'"
                                 @click="selectedBatter = 'striker'">
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-bold uppercase" :class="selectedBatter === 'striker' ? 'text-red-600' : 'text-gray-500'">⭐ Striker</span>
-                                    <span class="w-3 h-3 rounded-full" :class="selectedBatter === 'striker' ? 'bg-red-500' : 'bg-gray-300'"></span>
+                                    <span class="text-xs font-bold uppercase" :class="selectedBatter === 'striker' ? 'text-red-400' : 'text-gray-500'">⭐ Striker</span>
+                                    <span class="w-3 h-3 rounded-full" :class="selectedBatter === 'striker' ? 'bg-red-500' : 'bg-gray-600'"></span>
                                 </div>
-                                <select x-model="strikerId" @change="onBatterChange('striker')" class="w-full rounded border-gray-300 text-sm font-semibold">
+                                <select x-model="strikerId" @change="onBatterChange('striker')" class="w-full rounded bg-[#0F1A2E] border-white/10 text-white text-sm font-semibold">
                                     <option value="">— Select Striker —</option>
                                     <template x-for="opt in availableBatters()" :key="'s'+opt.id">
                                         <option :value="opt.id" x-text="opt.name"></option>
@@ -181,9 +192,9 @@
                                 </select>
                                 <template x-if="strikerId && batters[strikerId]">
                                     <div class="mt-2 text-center">
-                                        <span class="text-2xl font-black text-gray-800" x-text="batters[strikerId].runs"></span>
-                                        <span class="text-sm text-gray-500">(<span x-text="batters[strikerId].balls_faced"></span>b)</span>
-                                        <div class="text-xs text-gray-400 mt-1">
+                                        <span class="text-2xl font-black text-white" x-text="batters[strikerId].runs"></span>
+                                        <span class="text-sm text-gray-400">(<span x-text="batters[strikerId].balls_faced"></span>b)</span>
+                                        <div class="text-xs text-gray-500 mt-1">
                                             4s: <span x-text="batters[strikerId].fours"></span> | 6s: <span x-text="batters[strikerId].sixes"></span>
                                         </div>
                                     </div>
@@ -192,13 +203,13 @@
 
                             {{-- Non-Striker --}}
                             <div class="border-2 rounded-lg p-3 cursor-pointer"
-                                :class="selectedBatter === 'non-striker' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
+                                :class="selectedBatter === 'non-striker' ? 'border-blue-500 bg-blue-500/10' : 'border-white/10 hover:border-white/20'"
                                 @click="selectedBatter = 'non-striker'">
                                 <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs font-bold uppercase" :class="selectedBatter === 'non-striker' ? 'text-blue-600' : 'text-gray-500'">Non-Striker</span>
-                                    <span class="w-3 h-3 rounded-full" :class="selectedBatter === 'non-striker' ? 'bg-blue-500' : 'bg-gray-300'"></span>
+                                    <span class="text-xs font-bold uppercase" :class="selectedBatter === 'non-striker' ? 'text-blue-400' : 'text-gray-500'">Non-Striker</span>
+                                    <span class="w-3 h-3 rounded-full" :class="selectedBatter === 'non-striker' ? 'bg-blue-500' : 'bg-gray-600'"></span>
                                 </div>
-                                <select x-model="nonStrikerId" @change="onBatterChange('non-striker')" class="w-full rounded border-gray-300 text-sm font-semibold">
+                                <select x-model="nonStrikerId" @change="onBatterChange('non-striker')" class="w-full rounded bg-[#0F1A2E] border-white/10 text-white text-sm font-semibold">
                                     <option value="">— Select Non-Striker —</option>
                                     <template x-for="opt in availableBatters()" :key="'ns'+opt.id">
                                         <option :value="opt.id" x-text="opt.name"></option>
@@ -206,9 +217,9 @@
                                 </select>
                                 <template x-if="nonStrikerId && batters[nonStrikerId]">
                                     <div class="mt-2 text-center">
-                                        <span class="text-2xl font-black text-gray-800" x-text="batters[nonStrikerId].runs"></span>
-                                        <span class="text-sm text-gray-500">(<span x-text="batters[nonStrikerId].balls_faced"></span>b)</span>
-                                        <div class="text-xs text-gray-400 mt-1">
+                                        <span class="text-2xl font-black text-white" x-text="batters[nonStrikerId].runs"></span>
+                                        <span class="text-sm text-gray-400">(<span x-text="batters[nonStrikerId].balls_faced"></span>b)</span>
+                                        <div class="text-xs text-gray-500 mt-1">
                                             4s: <span x-text="batters[nonStrikerId].fours"></span> | 6s: <span x-text="batters[nonStrikerId].sixes"></span>
                                         </div>
                                     </div>
@@ -218,56 +229,56 @@
 
                         {{-- Swap button --}}
                         <div class="text-center mt-3">
-                            <button type="button" @click="swapStrike()" class="px-4 py-1 text-sm bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition">🔄 Swap Strike</button>
+                            <button type="button" @click="swapStrike()" class="px-4 py-1 text-sm bg-white/10 text-gray-300 rounded-full hover:bg-white/20 transition">🔄 Swap Strike</button>
                         </div>
                     </div>
                 </div>
 
                 {{-- Quick Score Buttons --}}
-                <div class="bg-white shadow-sm sm:rounded-lg mb-4"
+                <div class="bg-[#162236] shadow-lg sm:rounded-lg mb-4 border border-white/5"
                     :class="{ 'opacity-40 pointer-events-none': !overInProgress || overComplete }">
                     <div class="p-4">
-                        <h4 class="text-sm font-bold text-gray-700 uppercase mb-1">⚡ Score This Ball</h4>
-                        <p class="text-xs text-gray-400 mb-3" x-show="overInProgress && !overComplete">
+                        <h4 class="text-sm font-bold text-gray-300 uppercase mb-1">⚡ Score This Ball</h4>
+                        <p class="text-xs text-gray-500 mb-3" x-show="overInProgress && !overComplete">
                             Ball <span x-text="legalBallsInOver + 1"></span> of 6 — scoring to
-                            <span x-text="selectedBatter === 'striker' ? 'Striker' : 'Non-Striker'" class="font-semibold text-indigo-600"></span>
+                            <span x-text="selectedBatter === 'striker' ? 'Striker' : 'Non-Striker'" class="font-semibold text-[#C8973A]"></span>
                         </p>
                         <p class="text-xs text-red-400 mb-3" x-show="!overInProgress">Start an over first to score balls.</p>
 
                         {{-- Run buttons --}}
                         <div class="grid grid-cols-4 md:grid-cols-7 gap-2">
-                            <button type="button" @click="scoreBall(0, 'run')" class="py-3 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-lg transition active:scale-95">0</button>
-                            <button type="button" @click="scoreBall(1, 'run')" class="py-3 rounded-lg bg-[#FEF9EE] hover:bg-[#FCF0D8] text-[#C8973A] font-bold text-lg transition active:scale-95">1</button>
-                            <button type="button" @click="scoreBall(2, 'run')" class="py-3 rounded-lg bg-[#FEF9EE] hover:bg-[#FCF0D8] text-[#C8973A] font-bold text-lg transition active:scale-95">2</button>
-                            <button type="button" @click="scoreBall(3, 'run')" class="py-3 rounded-lg bg-[#FEF9EE] hover:bg-[#FCF0D8] text-[#C8973A] font-bold text-lg transition active:scale-95">3</button>
-                            <button type="button" @click="scoreBall(4, 'run')" class="py-3 rounded-lg bg-green-500 hover:bg-green-600 text-white font-bold text-lg transition active:scale-95">4</button>
-                            <button type="button" @click="scoreBall(6, 'run')" class="py-3 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white font-bold text-lg transition active:scale-95">6</button>
-                            <button type="button" @click="scoreBall(0, 'wicket')" class="py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-lg transition active:scale-95">OUT</button>
+                            <button type="button" @click="scoreBall(0, 'run')" style="color:#ccc;background:rgba(255,255,255,0.1)" class="py-3 rounded-lg hover:bg-white/20 font-bold text-lg transition active:scale-95">0</button>
+                            <button type="button" @click="scoreBall(1, 'run')" style="color:#F0CC7A;background:rgba(200,151,58,0.2)" class="py-3 rounded-lg hover:bg-[#C8973A]/30 font-bold text-lg transition active:scale-95">1</button>
+                            <button type="button" @click="scoreBall(2, 'run')" style="color:#F0CC7A;background:rgba(200,151,58,0.2)" class="py-3 rounded-lg hover:bg-[#C8973A]/30 font-bold text-lg transition active:scale-95">2</button>
+                            <button type="button" @click="scoreBall(3, 'run')" style="color:#F0CC7A;background:rgba(200,151,58,0.2)" class="py-3 rounded-lg hover:bg-[#C8973A]/30 font-bold text-lg transition active:scale-95">3</button>
+                            <button type="button" @click="scoreBall(4, 'run')" style="color:#fff;background:#16a34a" class="py-3 rounded-lg hover:bg-green-700 font-bold text-lg transition active:scale-95">4</button>
+                            <button type="button" @click="scoreBall(6, 'run')" style="color:#fff;background:#eab308" class="py-3 rounded-lg hover:bg-yellow-600 font-bold text-lg transition active:scale-95">6</button>
+                            <button type="button" @click="scoreBall(0, 'wicket')" style="color:#fff;background:#dc2626" class="py-3 rounded-lg hover:bg-red-700 font-bold text-lg transition active:scale-95">OUT</button>
                         </div>
 
                         {{-- Extras & Undo --}}
                         <div class="grid grid-cols-4 gap-2 mt-2">
-                            <button type="button" @click="scoreExtra('wide')" class="py-2 rounded-lg bg-orange-100 hover:bg-orange-200 text-orange-700 text-sm font-semibold transition">Wide +1</button>
-                            <button type="button" @click="scoreExtra('noball')" class="py-2 rounded-lg bg-orange-100 hover:bg-orange-200 text-orange-700 text-sm font-semibold transition">No Ball +1</button>
-                            <button type="button" @click="scoreExtra('bye')" class="py-2 rounded-lg bg-orange-100 hover:bg-orange-200 text-orange-700 text-sm font-semibold transition">Bye +1</button>
-                            <button type="button" @click="undoLastBall()" class="py-2 rounded-lg bg-gray-300 hover:bg-gray-400 text-gray-800 text-sm font-semibold transition">↩ Undo</button>
+                            <button type="button" @click="scoreExtra('wide')" style="color:#fb923c;background:rgba(249,115,22,0.15)" class="py-2 rounded-lg text-sm font-semibold transition">Wide +1</button>
+                            <button type="button" @click="scoreExtra('noball')" style="color:#fb923c;background:rgba(249,115,22,0.15)" class="py-2 rounded-lg text-sm font-semibold transition">No Ball +1</button>
+                            <button type="button" @click="scoreExtra('bye')" style="color:#fb923c;background:rgba(249,115,22,0.15)" class="py-2 rounded-lg text-sm font-semibold transition">Bye +1</button>
+                            <button type="button" @click="undoLastBall()" style="color:#d1d5db;background:rgba(255,255,255,0.1)" class="py-2 rounded-lg text-sm font-semibold transition">↩ Undo</button>
                         </div>
                     </div>
                 </div>
 
                 {{-- Over History --}}
                 <template x-if="overHistory.length > 0">
-                    <div class="bg-white shadow-sm sm:rounded-lg mb-4">
+                    <div class="bg-[#162236] shadow-lg sm:rounded-lg mb-4 border border-white/5">
                         <div class="p-4">
                             <button type="button" @click="showOverHistory = !showOverHistory" class="flex items-center justify-between w-full text-left">
-                                <h4 class="text-sm font-bold text-gray-700 uppercase">📋 Over History</h4>
-                                <svg :class="showOverHistory ? 'rotate-180' : ''" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                <h4 class="text-sm font-bold text-gray-300 uppercase">📋 Over History</h4>
+                                <svg :class="showOverHistory ? 'rotate-180' : ''" class="w-5 h-5 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                             </button>
                             <div x-show="showOverHistory" x-transition class="mt-3 space-y-2">
                                 <template x-for="(ov, oidx) in overHistory" :key="'oh'+oidx">
-                                    <div class="flex items-center gap-3 py-2 border-b border-gray-100 text-sm">
+                                    <div class="flex items-center gap-3 py-2 border-b border-white/5 text-sm">
                                         <span class="text-gray-500 font-mono w-14" x-text="'Over ' + (oidx + 1)"></span>
-                                        <span class="text-gray-700 font-medium" x-text="ov.bowlerName"></span>
+                                        <span class="text-gray-300 font-medium" x-text="ov.bowlerName"></span>
                                         <div class="flex gap-1">
                                             <template x-for="(b, bidx) in ov.balls" :key="'ohb'+bidx">
                                                 <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
@@ -276,7 +287,7 @@
                                                 </span>
                                             </template>
                                         </div>
-                                        <span class="text-gray-400 text-xs ml-auto" x-text="ov.runs + ' runs'"></span>
+                                        <span class="text-gray-500 text-xs ml-auto" x-text="ov.runs + ' runs'"></span>
                                     </div>
                                 </template>
                             </div>
@@ -285,35 +296,35 @@
                 </template>
 
                 {{-- Full Batting Scorecard (collapsible) --}}
-                <div class="bg-white shadow-sm sm:rounded-lg mb-4">
+                <div class="bg-[#162236] shadow-lg sm:rounded-lg mb-4 border border-white/5">
                     <div class="p-4">
                         <button type="button" @click="showBatting = !showBatting" class="flex items-center justify-between w-full text-left">
-                            <h4 class="text-sm font-bold text-gray-700 uppercase">📊 Full Batting Scorecard</h4>
-                            <svg :class="showBatting ? 'rotate-180' : ''" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            <h4 class="text-sm font-bold text-gray-300 uppercase">📊 Full Batting Scorecard</h4>
+                            <svg :class="showBatting ? 'rotate-180' : ''" class="w-5 h-5 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
                         <div x-show="showBatting" x-transition class="mt-3 overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200 text-sm">
-                                <thead class="bg-gray-50">
+                            <table class="min-w-full divide-y divide-white/10 text-sm">
+                                <thead class="bg-[#0F1A2E]">
                                     <tr>
-                                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">Batter</th>
-                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">R</th>
-                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">B</th>
-                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">4s</th>
-                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">6s</th>
-                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">Status</th>
-                                        <th class="px-2 py-2 text-left text-xs font-medium text-gray-500">Dismissal</th>
+                                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-400">Batter</th>
+                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-400">R</th>
+                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-400">B</th>
+                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-400">4s</th>
+                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-400">6s</th>
+                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-400">Status</th>
+                                        <th class="px-2 py-2 text-left text-xs font-medium text-gray-400">Dismissal</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-100">
+                                <tbody class="divide-y divide-white/5">
                                     @foreach($currentInning->batterScores->sortBy('batting_position') as $bs)
-                                        <tr :class="{ 'bg-yellow-50': batters[{{ $bs->id }}] && batters[{{ $bs->id }}].status === 'batting' }">
-                                            <td class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap">{{ $bs->player->full_name }}</td>
-                                            <td class="px-2 py-2"><input type="number" name="batters[{{ $bs->id }}][runs]" x-model.number="batters[{{ $bs->id }}].runs" min="0" class="w-14 text-center rounded border-gray-300 text-sm" @input="recalcTotals()"></td>
-                                            <td class="px-2 py-2"><input type="number" name="batters[{{ $bs->id }}][balls_faced]" x-model.number="batters[{{ $bs->id }}].balls_faced" min="0" class="w-14 text-center rounded border-gray-300 text-sm"></td>
-                                            <td class="px-2 py-2"><input type="number" name="batters[{{ $bs->id }}][fours]" x-model.number="batters[{{ $bs->id }}].fours" min="0" class="w-12 text-center rounded border-gray-300 text-sm"></td>
-                                            <td class="px-2 py-2"><input type="number" name="batters[{{ $bs->id }}][sixes]" x-model.number="batters[{{ $bs->id }}].sixes" min="0" class="w-12 text-center rounded border-gray-300 text-sm"></td>
+                                        <tr :class="{ 'bg-[#C8973A]/10': batters[{{ $bs->id }}] && batters[{{ $bs->id }}].status === 'batting' }">
+                                            <td class="px-3 py-2 font-medium text-gray-200 whitespace-nowrap">{{ $bs->player->full_name }}</td>
+                                            <td class="px-2 py-2"><input type="number" name="batters[{{ $bs->id }}][runs]" x-model.number="batters[{{ $bs->id }}].runs" min="0" class="w-14 text-center rounded bg-[#0F1A2E] border-white/10 text-white text-sm" @input="recalcTotals()"></td>
+                                            <td class="px-2 py-2"><input type="number" name="batters[{{ $bs->id }}][balls_faced]" x-model.number="batters[{{ $bs->id }}].balls_faced" min="0" class="w-14 text-center rounded bg-[#0F1A2E] border-white/10 text-white text-sm"></td>
+                                            <td class="px-2 py-2"><input type="number" name="batters[{{ $bs->id }}][fours]" x-model.number="batters[{{ $bs->id }}].fours" min="0" class="w-12 text-center rounded bg-[#0F1A2E] border-white/10 text-white text-sm"></td>
+                                            <td class="px-2 py-2"><input type="number" name="batters[{{ $bs->id }}][sixes]" x-model.number="batters[{{ $bs->id }}].sixes" min="0" class="w-12 text-center rounded bg-[#0F1A2E] border-white/10 text-white text-sm"></td>
                                             <td class="px-2 py-2">
-                                                <select name="batters[{{ $bs->id }}][status]" x-model="batters[{{ $bs->id }}].status" class="rounded border-gray-300 text-xs" @change="recalcTotals()">
+                                                <select name="batters[{{ $bs->id }}][status]" x-model="batters[{{ $bs->id }}].status" class="rounded bg-[#0F1A2E] border-white/10 text-white text-xs" @change="recalcTotals()">
                                                     <option value="yet_to_bat">Yet to bat</option>
                                                     <option value="batting">Batting *</option>
                                                     <option value="out">Out</option>
@@ -321,7 +332,7 @@
                                                     <option value="retired">Retired</option>
                                                 </select>
                                             </td>
-                                            <td class="px-2 py-2"><input type="text" name="batters[{{ $bs->id }}][dismissal_info]" x-model="batters[{{ $bs->id }}].dismissal_info" placeholder="c X b Y" class="w-32 rounded border-gray-300 text-xs"></td>
+                                            <td class="px-2 py-2"><input type="text" name="batters[{{ $bs->id }}][dismissal_info]" x-model="batters[{{ $bs->id }}].dismissal_info" placeholder="c X b Y" class="w-32 rounded bg-[#0F1A2E] border-white/10 text-white text-xs placeholder-gray-600"></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -331,31 +342,31 @@
                 </div>
 
                 {{-- Full Bowling Scorecard (collapsible) --}}
-                <div class="bg-white shadow-sm sm:rounded-lg mb-4">
+                <div class="bg-[#162236] shadow-lg sm:rounded-lg mb-4 border border-white/5">
                     <div class="p-4">
                         <button type="button" @click="showBowling = !showBowling" class="flex items-center justify-between w-full text-left">
-                            <h4 class="text-sm font-bold text-gray-700 uppercase">🎯 Full Bowling Scorecard</h4>
-                            <svg :class="showBowling ? 'rotate-180' : ''" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            <h4 class="text-sm font-bold text-gray-300 uppercase">🎯 Full Bowling Scorecard</h4>
+                            <svg :class="showBowling ? 'rotate-180' : ''" class="w-5 h-5 text-gray-500 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </button>
                         <div x-show="showBowling" x-transition class="mt-3 overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200 text-sm">
-                                <thead class="bg-gray-50">
+                            <table class="min-w-full divide-y divide-white/10 text-sm">
+                                <thead class="bg-[#0F1A2E]">
                                     <tr>
-                                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500">Bowler</th>
-                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">O</th>
-                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">M</th>
-                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">R</th>
-                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-500">W</th>
+                                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-400">Bowler</th>
+                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-400">O</th>
+                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-400">M</th>
+                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-400">R</th>
+                                        <th class="px-2 py-2 text-center text-xs font-medium text-gray-400">W</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-100">
+                                <tbody class="divide-y divide-white/5">
                                     @foreach($currentInning->bowlerScores as $bw)
-                                        <tr :class="{ 'bg-[#FEF9EE]': currentBowlerId == {{ $bw->id }} }">
-                                            <td class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap">{{ $bw->player->full_name }}</td>
-                                            <td class="px-2 py-2"><input type="text" name="bowlers[{{ $bw->id }}][overs]" x-model="bowlers[{{ $bw->id }}].overs" class="w-14 text-center rounded border-gray-300 text-sm"></td>
-                                            <td class="px-2 py-2"><input type="number" name="bowlers[{{ $bw->id }}][maidens]" x-model.number="bowlers[{{ $bw->id }}].maidens" min="0" class="w-12 text-center rounded border-gray-300 text-sm"></td>
-                                            <td class="px-2 py-2"><input type="number" name="bowlers[{{ $bw->id }}][runs_conceded]" x-model.number="bowlers[{{ $bw->id }}].runs_conceded" min="0" class="w-14 text-center rounded border-gray-300 text-sm"></td>
-                                            <td class="px-2 py-2"><input type="number" name="bowlers[{{ $bw->id }}][wickets]" x-model.number="bowlers[{{ $bw->id }}].wickets" min="0" class="w-12 text-center rounded border-gray-300 text-sm"></td>
+                                        <tr :class="{ 'bg-[#C8973A]/10': currentBowlerId == {{ $bw->id }} }">
+                                            <td class="px-3 py-2 font-medium text-gray-200 whitespace-nowrap">{{ $bw->player->full_name }}</td>
+                                            <td class="px-2 py-2"><input type="text" name="bowlers[{{ $bw->id }}][overs]" x-model="bowlers[{{ $bw->id }}].overs" class="w-14 text-center rounded bg-[#0F1A2E] border-white/10 text-white text-sm"></td>
+                                            <td class="px-2 py-2"><input type="number" name="bowlers[{{ $bw->id }}][maidens]" x-model.number="bowlers[{{ $bw->id }}].maidens" min="0" class="w-12 text-center rounded bg-[#0F1A2E] border-white/10 text-white text-sm"></td>
+                                            <td class="px-2 py-2"><input type="number" name="bowlers[{{ $bw->id }}][runs_conceded]" x-model.number="bowlers[{{ $bw->id }}].runs_conceded" min="0" class="w-14 text-center rounded bg-[#0F1A2E] border-white/10 text-white text-sm"></td>
+                                            <td class="px-2 py-2"><input type="number" name="bowlers[{{ $bw->id }}][wickets]" x-model.number="bowlers[{{ $bw->id }}].wickets" min="0" class="w-12 text-center rounded bg-[#0F1A2E] border-white/10 text-white text-sm"></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -365,9 +376,9 @@
                 </div>
 
                 {{-- Floating Save Bar --}}
-                <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 p-3">
+                <div class="fixed bottom-0 left-0 right-0 bg-[#0A1628] border-t border-white/10 shadow-2xl z-50 p-3">
                     <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
-                        <div class="text-sm font-bold text-gray-700">
+                        <div class="text-sm font-bold text-white">
                             <span x-text="totalRuns">{{ $currentInning->total_runs }}</span>/<span x-text="totalWickets">{{ $currentInning->total_wickets }}</span>
                             (<span x-text="totalOvers">{{ $currentInning->total_overs }}</span> ov)
                         </div>
@@ -377,7 +388,7 @@
                                     🔄 Switch
                                 </button>
                             @endif
-                            <button type="submit" class="px-6 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 font-semibold">
+                            <button type="submit" class="px-6 py-2 bg-[#C8973A] text-white text-sm rounded-md hover:bg-[#B8872A] font-semibold">
                                 💾 Save Scores
                             </button>
                         </div>
@@ -392,8 +403,8 @@
             @endif
 
         @else
-            <div class="bg-white shadow-sm sm:rounded-lg p-6">
-                <p class="text-gray-500">No active innings. The match may have been completed.</p>
+            <div class="bg-[#162236] shadow-lg sm:rounded-lg p-6 border border-white/5">
+                <p class="text-gray-400">No active innings. The match may have been completed.</p>
             </div>
         @endif
     </div>
@@ -839,14 +850,14 @@
                 getBallClass(idx) {
                     if (idx < this.legalBalls.length) {
                         const ball = this.legalBalls[idx];
-                        if (ball.type === 'wicket') return 'bg-red-500 text-white border-red-600';
-                        if (ball.runs === 4) return 'bg-green-500 text-white border-green-600';
-                        if (ball.runs === 6) return 'bg-yellow-500 text-white border-yellow-600';
-                        if (ball.runs === 0 || ball.type === 'bye') return 'bg-gray-200 text-gray-600 border-gray-300';
-                        return 'bg-blue-500 text-white border-blue-600';
+                        if (ball.type === 'wicket') return 'bg-red-600 text-white border-red-500';
+                        if (ball.runs === 4) return 'bg-green-600 text-white border-green-500';
+                        if (ball.runs === 6) return 'bg-yellow-500 text-white border-yellow-400';
+                        if (ball.runs === 0 || ball.type === 'bye') return 'bg-white/10 text-gray-400 border-white/20';
+                        return 'bg-[#C8973A] text-white border-[#D4A44C]';
                     }
-                    if (idx === this.legalBallsInOver) return 'bg-white border-indigo-400 text-indigo-400 border-dashed';
-                    return 'bg-gray-50 border-gray-200 text-gray-300';
+                    if (idx === this.legalBallsInOver) return 'bg-transparent border-[#C8973A] text-[#C8973A] border-dashed';
+                    return 'bg-white/5 border-white/10 text-gray-600';
                 },
 
                 getBallDisplay(idx) {
@@ -855,13 +866,13 @@
                 },
 
                 getOverHistoryBallClass(ball) {
-                    if (ball.type === 'wicket') return 'bg-red-100 text-red-600 border border-red-300';
-                    if (ball.type === 'wide') return 'bg-orange-100 text-orange-600 border border-orange-300';
-                    if (ball.type === 'noball') return 'bg-yellow-100 text-yellow-700 border border-yellow-300';
-                    if (ball.runs === 4) return 'bg-green-100 text-green-700 border border-green-300';
-                    if (ball.runs === 6) return 'bg-yellow-100 text-yellow-700 border border-yellow-300';
-                    if (ball.runs === 0) return 'bg-gray-100 text-gray-500 border border-gray-200';
-                    return 'bg-[#FEF9EE] text-[#C8973A] border border-[#E8D5A8]';
+                    if (ball.type === 'wicket') return 'bg-red-600/30 text-red-400 border border-red-500/40';
+                    if (ball.type === 'wide') return 'bg-orange-500/20 text-orange-400 border border-orange-500/30';
+                    if (ball.type === 'noball') return 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30';
+                    if (ball.runs === 4) return 'bg-green-600/30 text-green-400 border border-green-500/40';
+                    if (ball.runs === 6) return 'bg-yellow-500/30 text-yellow-400 border border-yellow-500/40';
+                    if (ball.runs === 0) return 'bg-white/5 text-gray-500 border border-white/10';
+                    return 'bg-[#C8973A]/20 text-[#D4A44C] border border-[#C8973A]/30';
                 },
             };
         }
